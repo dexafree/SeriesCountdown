@@ -12,11 +12,14 @@ import android.widget.ImageView;
 
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.adapters.SeriesAdapter;
+import com.dexafree.seriescountdown.interactors.RxPopularSeriesInteractor;
 import com.dexafree.seriescountdown.interfaces.SeriesView;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.presenters.MainPresenter;
+import com.dexafree.seriescountdown.presenters.RxMainPresenter;
 import com.dexafree.seriescountdown.utils.RecyclerClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -24,30 +27,32 @@ import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
-public class MainActivity extends BaseActivity implements SeriesView {
+public class MainActivity extends BaseActivity implements SeriesView, RxMainPresenter.Callback {
 
 
     @Bind(R.id.series_recycler_view)
     RecyclerView seriesRecyclerView;
 
-    private MainPresenter presenter;
+    //private MainPresenter presenter;
+    private SeriesAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new MainPresenter(this);
+        //presenter = new MainPresenter(this);
         setToolbar();
         ButterKnife.bind(this);
-
-
+        mAdapter = new SeriesAdapter(new ArrayList<Serie>());
         prepareRecycler();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        presenter.init();
+        //presenter.init();
+        new RxMainPresenter(this).loadSeries();
     }
 
     private void prepareRecycler(){
@@ -64,6 +69,7 @@ public class MainActivity extends BaseActivity implements SeriesView {
                 startDetailActivity(serie, image);
             }
         }));
+        seriesRecyclerView.setAdapter(mAdapter);
     }
 
     private void startDetailActivity(Serie serie, View view){
@@ -73,6 +79,11 @@ public class MainActivity extends BaseActivity implements SeriesView {
     @Override
     public void showSeries(List<Serie> series) {
         seriesRecyclerView.setAdapter(new SeriesAdapter(series));
+    }
+
+    @Override
+    public void addItem(Serie serie) {
+        mAdapter.addItem(serie);
     }
 
     @Override

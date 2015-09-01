@@ -1,6 +1,7 @@
 package com.dexafree.seriescountdown.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.serie_item, parent, false);
+        Log.d("SERIESADAPTER", "NEW VIEWHOLDER");
         return new ViewHolder(v);
     }
 
@@ -58,5 +60,10 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
             image = (ImageView) itemView.findViewById(R.id.serie_image);
             text = (TextView) itemView.findViewById(R.id.serie_name);
         }
+    }
+
+    public void addItem(Serie serie){
+        seriesList.add(serie);
+        notifyItemInserted(seriesList.size()-1);
     }
 }
