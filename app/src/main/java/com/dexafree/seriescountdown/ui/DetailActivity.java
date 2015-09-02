@@ -70,6 +70,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
         Picasso.with(this)
                 .load(mSerie.getImageHDUrl())
+                .fit().centerCrop()
                 .into(serieImage);
     }
 

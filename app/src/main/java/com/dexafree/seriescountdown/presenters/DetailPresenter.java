@@ -8,6 +8,7 @@ import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.model.SerieInfo;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.Duration;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
@@ -55,8 +56,7 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
         Period timeRemaining = new Period(currentTime, emissionTime).toPeriod();
 
-
-        int days = timeRemaining.getDays();
+        int days = Days.daysBetween(currentTime.toLocalDate(), emissionTime.toLocalDate()).getDays();
         int hours = timeRemaining.getHours();
         int minutes = timeRemaining.getMinutes();
 
