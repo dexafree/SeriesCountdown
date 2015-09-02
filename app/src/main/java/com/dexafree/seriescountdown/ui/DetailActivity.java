@@ -13,7 +13,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dexafree.seriescountdown.R;
@@ -45,6 +52,9 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
     @Bind(R.id.next_episode_name_textview)
     TextView nextTitleTextView;
+
+    @Bind(R.id.detail_content)
+    LinearLayout detailContent;
 
     private MenuItem starItem;
 
@@ -151,6 +161,39 @@ public class DetailActivity extends BaseActivity implements DetailView {
                 .into(serieImage);
     }
 
+    private void fadeInContent(){
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        Animation moveUp = new TranslateAnimation(0, 0, 100, 0);
+        moveUp.setInterpolator(new DecelerateInterpolator());
+        moveUp.setDuration(1000);
+
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        animation.addAnimation(moveUp);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                detailContent.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        detailContent.startAnimation(animation);
+    }
+
     private boolean addTransitionListener() {
         final Transition transition = getWindow().getSharedElementEnterTransition();
 
@@ -164,6 +207,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
                     // Make sure we remove ourselves as a listener
                     transition.removeListener(this);
+                    fadeInContent();
                 }
 
                 @Override
