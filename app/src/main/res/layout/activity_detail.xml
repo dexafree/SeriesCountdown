@@ -43,22 +43,80 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/small_padding"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:padding="@dimen/big_padding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:elevation="2dp"
+            app:cardCornerRadius="2dp"
+            app:cardUseCompatPadding="true">
 
-            <TextView
-                android:padding="@dimen/big_padding"
-                android:gravity="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:text="PLACEHOLDER"
-                android:textSize="24sp"
+            <RelativeLayout
+                android:paddingLeft="@dimen/big_padding"
+                android:paddingRight="@dimen/big_padding"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/time_remaining_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:paddingTop="@dimen/big_padding"
+                    android:paddingBottom="@dimen/big_padding"
+                    android:gravity="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:text="PLACEHOLDER"
+                    android:textSize="24sp"/>
+
+                <ImageView
+                    android:id="@+id/outline_icon"
+                    android:layout_below="@id/time_remaining_textview"
+                    android:layout_marginBottom="@dimen/big_padding"
+                    android:layout_marginRight="@dimen/big_padding"
+                    android:layout_width="40dp"
+                    android:layout_height="72dp"
+                    android:src="@mipmap/ic_indicator"
+                    android:tint="@color/accent"/>
+
+                <TextView
+                    android:id="@+id/date_next_title_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="72dp"
+                    android:layout_below="@id/time_remaining_textview"
+                    android:paddingTop="@dimen/big_padding"
+                    android:paddingBottom="@dimen/big_padding"
+                    android:paddingRight="@dimen/small_padding"
+                    android:layout_toRightOf="@id/outline_icon"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/black"
+                    android:text="Next episode"/>
+
+                <TextView
+                    android:id="@+id/date_next_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/date_next_title_textview"
+                    android:layout_below="@id/time_remaining_textview"
+                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/big_padding"
+                    android:paddingBottom="@dimen/big_padding"
+                    android:paddingLeft="@dimen/small_padding"
+                    android:layout_toRightOf="@id/date_next_title_textview"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Next episode"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
 
     </ScrollView>
 

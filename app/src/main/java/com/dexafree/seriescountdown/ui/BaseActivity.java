@@ -22,6 +22,7 @@ public class BaseActivity extends AppCompatActivity implements IBaseView {
     protected void setToolbar(){
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getTitle());
     }
 
     protected void showToast(String message){

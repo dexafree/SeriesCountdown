@@ -2,6 +2,8 @@ package com.dexafree.seriescountdown.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -33,7 +35,7 @@ public class MainActivity extends BaseActivity implements SeriesView, RxMainPres
     @Bind(R.id.series_recycler_view)
     RecyclerView seriesRecyclerView;
 
-    //private MainPresenter presenter;
+    private RxMainPresenter presenter;
     private SeriesAdapter mAdapter;
 
 
@@ -41,7 +43,7 @@ public class MainActivity extends BaseActivity implements SeriesView, RxMainPres
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //presenter = new MainPresenter(this);
+        presenter = new RxMainPresenter(this);
         setToolbar();
         ButterKnife.bind(this);
         mAdapter = new SeriesAdapter(new ArrayList<Serie>());
@@ -51,12 +53,21 @@ public class MainActivity extends BaseActivity implements SeriesView, RxMainPres
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        //presenter.init();
-        new RxMainPresenter(this).loadSeries();
+        presenter.loadSeries();
     }
 
     private void prepareRecycler(){
-        seriesRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        seriesRecyclerView.setLayoutManager(new GridLayoutManager(this, 2) {
+            @Override
+            public int scrollVerticallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
+                int scrollRange = super.scrollVerticallyBy(dx, recycler, state);
+                int overscroll = dx - scrollRange;
+                if (overscroll > 10) {
+                    presenter.listFinished();
+                }
+                return scrollRange;
+            }
+        });
         seriesRecyclerView.setItemAnimator(new SlideInUpAnimator());
         seriesRecyclerView.getItemAnimator().setAddDuration(300);
         seriesRecyclerView.getItemAnimator().setRemoveDuration(300);
@@ -64,7 +75,7 @@ public class MainActivity extends BaseActivity implements SeriesView, RxMainPres
             @Override
             public void onItemClick(View view, int position) {
                 Serie serie = (Serie) view.getTag();
-                ImageView image = (ImageView)view.findViewById(R.id.serie_image);
+                ImageView image = (ImageView) view.findViewById(R.id.serie_image);
 
                 startDetailActivity(serie, image);
             }

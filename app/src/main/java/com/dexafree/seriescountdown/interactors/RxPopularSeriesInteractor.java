@@ -1,25 +1,19 @@
 package com.dexafree.seriescountdown.interactors;
 
-import com.arasthel.asyncjob.AsyncJob;
 import com.dexafree.seriescountdown.model.Serie;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import rx.Observable;
 import rx.Observer;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -28,25 +22,25 @@ import rx.schedulers.Schedulers;
 public class RxPopularSeriesInteractor {
 
 
-    private final static String POPULAR_SERIES_ENDPOINT = "http://www.episodate.com/most-popular";
+    private final static String POPULAR_SERIES_ENDPOINT = "http://www.episodate.com/most-popular?page=";
 
     private final static String BLOCK_SELECTOR = "div.mix-border > a";
     private final static String IMAGE_SELECTOR = "div.image-block";
     private final static String TITLE_SELECTOR = "span.sorting-cover > span";
 
 
-    public Subscription loadSeries(Observer<Serie> subscriber) {
+    public Subscription loadSeries(Observer<Serie> subscriber, int page) {
 
-        return getObservable()
+        return getObservable(page)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(subscriber);
 
     }
 
-    private Observable<Serie> getObservable(){
+    private Observable<Serie> getObservable(int page){
 
-        return Observable.just(POPULAR_SERIES_ENDPOINT)
+        return Observable.just(POPULAR_SERIES_ENDPOINT + page)
                 .map(this::getElementsFromUrl)
                 .flatMap(Observable::from)
                 .map(this::getSerieFromElement);
@@ -56,7 +50,7 @@ public class RxPopularSeriesInteractor {
     private List<Element> getElementsFromUrl(String url){
 
             try {
-                return Jsoup.connect(POPULAR_SERIES_ENDPOINT)
+                return Jsoup.connect(url)
                         .timeout(5000)
                         .get()
                         .select(BLOCK_SELECTOR);
@@ -89,7 +83,7 @@ public class RxPopularSeriesInteractor {
         Element imageBlock = element.select(IMAGE_SELECTOR).first();
         String style = imageBlock.attr("style");
 
-        Pattern pattern = Pattern.compile("(http.*\\.jpg)");
+        Pattern pattern = Pattern.compile("(http.*\\.(jpg|png))");
 
         Matcher matcher = pattern.matcher(style);
 
@@ -97,6 +91,7 @@ public class RxPopularSeriesInteractor {
 
         if(matcher.find()){
             imageUrl = matcher.group();
+
         }
 
         return imageUrl;

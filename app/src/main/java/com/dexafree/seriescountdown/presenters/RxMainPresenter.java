@@ -21,16 +21,22 @@ public class RxMainPresenter implements Observer<Serie> {
     private Callback callback;
     private Subscription subscription;
     private RxPopularSeriesInteractor interactor;
+    private int currentPage;
 
     public RxMainPresenter(Callback callback) {
         this.callback = callback;
         this.interactor = new RxPopularSeriesInteractor();
+        this.currentPage = 1;
     }
 
     public void loadSeries(){
         if(subscription == null){
-            subscription = interactor.loadSeries(this);
+            subscription = interactor.loadSeries(this, currentPage++);
         }
+    }
+
+    public void listFinished(){
+        loadSeries();
     }
 
     @Override
@@ -49,7 +55,6 @@ public class RxMainPresenter implements Observer<Serie> {
 
     @Override
     public void onNext(Serie serie) {
-        Log.d("RXMAINPRESENTER", "ONNEXT: "+serie.getName() );
         callback.addItem(serie);
     }
 }

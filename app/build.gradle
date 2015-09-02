@@ -74,4 +74,6 @@ dependencies {
     compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.2.0'
 
     compile 'org.jsoup:jsoup:1.8.2'
+    compile 'joda-time:joda-time:2.8.2'
+
 }

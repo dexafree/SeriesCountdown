@@ -30,6 +30,10 @@ public class Serie implements Parcelable {
         return imageUrl;
     }
 
+    public String getImageHDUrl(){
+        return imageUrl.replace("thumbnail", "full");
+    }
+
 
     @Override
     public int describeContents() {
