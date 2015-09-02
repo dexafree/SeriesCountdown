@@ -64,7 +64,6 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_detail);
         setToolbar();
         ButterKnife.bind(this);
@@ -94,6 +93,8 @@ public class DetailActivity extends BaseActivity implements DetailView {
         if(addTransitionListener()){
             loadThumbnail();
         }
+        setExitTransition();
+
 
     }
 
@@ -192,6 +193,73 @@ public class DetailActivity extends BaseActivity implements DetailView {
         });
 
         detailContent.startAnimation(animation);
+    }
+
+    private void fadeOutContent(){
+        Animation fadeIn = new AlphaAnimation(1, 0);
+        fadeIn.setInterpolator(new AccelerateInterpolator()); //add this
+        fadeIn.setDuration(500);
+
+        Animation moveUp = new TranslateAnimation(0, 0, 0, 100);
+        moveUp.setInterpolator(new AccelerateInterpolator());
+        moveUp.setDuration(500);
+
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        animation.addAnimation(moveUp);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                detailContent.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        detailContent.startAnimation(animation);
+    }
+
+    private void setExitTransition(){
+        Transition transition = getWindow().getExitTransition();
+
+        if(transition != null){
+            transition.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    fadeOutContent();
+                    transition.removeListener(this);
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                    transition.removeListener(this);
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+
+                }
+            });
+        }
     }
 
     private boolean addTransitionListener() {
