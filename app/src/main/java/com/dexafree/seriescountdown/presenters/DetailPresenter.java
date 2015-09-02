@@ -1,7 +1,9 @@
 package com.dexafree.seriescountdown.presenters;
 
+import android.os.Handler;
 import android.util.Log;
 
+import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SerieDetailInteractor;
 import com.dexafree.seriescountdown.interfaces.DetailView;
 import com.dexafree.seriescountdown.model.Serie;
@@ -21,14 +23,24 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
     private DetailView view;
     private SerieDetailInteractor interactor;
+    private FavoriteSeriesInteractor favoriteSeriesInteractor;
 
     public DetailPresenter(DetailView view) {
         this.view = view;
         this.interactor = new SerieDetailInteractor(this);
+        this.favoriteSeriesInteractor = new FavoriteSeriesInteractor(view);
     }
 
     public void init(){
         Serie serie = view.getSerie();
+
+        boolean isSerieInserted = favoriteSeriesInteractor.isSerieInserted(serie);
+
+        Log.d("DETAILPRESENTER", "ISSERIEINSERTED: " + isSerieInserted);
+
+        new Handler().postDelayed(() -> view.setFavoritable(!isSerieInserted), 250);
+
+
         view.showProgress();
         interactor.loadSerieInfo(serie);
 
@@ -42,7 +54,7 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
         view.showTimeRemaining(timeUntilNextEpisode);
         view.showNextEpisodeDate(info.getDateNextEpisode());
-        view.showNExtEpisodeNumber(info.getNextEpisode());
+        view.showNextEpisodeNumber(info.getNextEpisode());
     }
 
     private String getTimeUntilNextEpisode(String dateNextEpisode){
@@ -59,6 +71,20 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
         int minutes = timeRemaining.getMinutes();
 
         return days + " Days "+hours+" Hours "+minutes+" Minutes";
+
+    }
+
+    public void onSaveSerieClicked(){
+        Serie serie = view.getSerie();
+
+        if(favoriteSeriesInteractor.isSerieInserted(serie)){
+            favoriteSeriesInteractor.deleteSerie(serie);
+            view.setFavoritable(true);
+        } else {
+            favoriteSeriesInteractor.saveSerie(serie);
+            view.setFavoritable(false);
+        }
+
 
     }
 

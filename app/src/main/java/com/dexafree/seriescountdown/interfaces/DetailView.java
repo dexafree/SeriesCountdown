@@ -11,9 +11,11 @@ public interface DetailView extends IBaseView {
     void showProgress();
     void hideProgress();
 
+    void setFavoritable(boolean favoritable);
+
     void showTimeRemaining(String text);
     void showNextEpisodeDate(String text);
-    void showNExtEpisodeNumber(String text);
+    void showNextEpisodeNumber(String text);
     void showError();
 
     Serie getSerie();

@@ -6,7 +6,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
+import android.transition.Transition;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -42,6 +46,8 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Bind(R.id.next_episode_name_textview)
     TextView nextTitleTextView;
 
+    private MenuItem starItem;
+
     private Serie mSerie;
     private DetailPresenter presenter;
 
@@ -55,6 +61,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
         presenter = new DetailPresenter(this);
         init();
     }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -70,12 +77,14 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
         mSerie = getIntent().getExtras().getParcelable(SERIE_EXTRA);
 
-        ((CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar_layout)).setTitle(mSerie.getName());
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
+        collapsingToolbarLayout.setTitle(mSerie.getName());
+        collapsingToolbarLayout.setOnTouchListener((v, event) -> true);
 
-        Picasso.with(this)
-                .load(mSerie.getImageHDUrl())
-                .fit().centerCrop()
-                .into(serieImage);
+        if(addTransitionListener()){
+            loadThumbnail();
+        }
+
     }
 
     @Override
@@ -99,7 +108,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
     }
 
     @Override
-    public void showNExtEpisodeNumber(String text) {
+    public void showNextEpisodeNumber(String text) {
         nextTitleTextView.setText(text);
     }
 
@@ -114,10 +123,101 @@ public class DetailActivity extends BaseActivity implements DetailView {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            ActivityCompat.finishAfterTransition(this);
+    public void setFavoritable(boolean favoritable) {
+
+        int drawable = favoritable ?  R.mipmap.ic_star : R.mipmap.ic_starred;
+
+        if(starItem != null) {
+            starItem.setIcon(drawable);
+        } else {
+            Log.d("DETAILACTIVITY", "STARITEM WAS NULL");
         }
+    }
+
+    private void loadFullSizeImage(){
+        Picasso.with(this)
+                .load(mSerie.getImageHDUrl())
+                .noFade()
+                .noPlaceholder()
+                .fit().centerCrop()
+                .into(serieImage);
+    }
+
+    private void loadThumbnail(){
+        Picasso.with(this)
+                .load(mSerie.getImageUrl())
+                .noFade()
+                .fit().centerCrop()
+                .into(serieImage);
+    }
+
+    private boolean addTransitionListener() {
+        final Transition transition = getWindow().getSharedElementEnterTransition();
+
+        if (transition != null) {
+            // There is an entering shared element transition so add a listener to it
+            transition.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    // As the transition has ended, we can now load the full-size image
+                    loadFullSizeImage();
+
+                    // Make sure we remove ourselves as a listener
+                    transition.removeListener(this);
+                }
+
+                @Override
+                public void onTransitionStart(Transition transition) {
+                    // No-op
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                    // Make sure we remove ourselves as a listener
+                    transition.removeListener(this);
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                    // No-op
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+                    // No-op
+                }
+            });
+            return true;
+        }
+
+        // If we reach here then we have not added a listener
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        starItem = menu.getItem(0);
+        Log.d("DETAILACTIVITY", "MENU SIZE: "+menu.size());
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch(id){
+            case android.R.id.home:
+                ActivityCompat.finishAfterTransition(this);
+                break;
+
+            case R.id.action_favorite:
+                presenter.onSaveSerieClicked();
+                break;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
