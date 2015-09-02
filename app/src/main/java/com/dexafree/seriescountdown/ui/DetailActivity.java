@@ -6,6 +6,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -37,6 +38,9 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
     @Bind(R.id.date_next_textview)
     TextView dateNextTextView;
+
+    @Bind(R.id.next_episode_name_textview)
+    TextView nextTitleTextView;
 
     private Serie mSerie;
     private DetailPresenter presenter;
@@ -95,6 +99,11 @@ public class DetailActivity extends BaseActivity implements DetailView {
     }
 
     @Override
+    public void showNExtEpisodeNumber(String text) {
+        nextTitleTextView.setText(text);
+    }
+
+    @Override
     public void showError() {
         showToast("ERROR");
     }
@@ -102,6 +111,14 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Override
     public Serie getSerie() {
         return mSerie;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            ActivityCompat.finishAfterTransition(this);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static void launch(BaseActivity activity, View transitionView, Serie serie) {

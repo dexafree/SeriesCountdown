@@ -7,4 +7,5 @@
     <color name="black">#000000</color>
 
     <color name="transparent_grey">#77000000</color>
+    <color name="divider_grey">#11000000</color>
 </resources>

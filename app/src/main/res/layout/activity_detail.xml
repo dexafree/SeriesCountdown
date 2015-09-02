@@ -20,14 +20,23 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-
-            <ImageView
-                android:id="@+id/serie_image"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_collapseMode="parallax"
-                android:scaleType="centerCrop"/>
+                android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/serie_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_collapseMode="parallax"
+                    android:scaleType="centerCrop"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/linear_gradient"/>
+
+            </FrameLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -43,79 +52,259 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/small_padding"
+        android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.CardView
-            android:padding="@dimen/big_padding"
+        <LinearLayout
+            android:padding="@dimen/small_padding"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="2dp"
-            app:cardCornerRadius="2dp"
-            app:cardUseCompatPadding="true">
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:paddingLeft="@dimen/big_padding"
-                android:paddingRight="@dimen/big_padding"
+            <android.support.v7.widget.CardView
+                android:padding="@dimen/big_padding"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:elevation="2dp"
+                app:cardCornerRadius="2dp"
+                app:cardUseCompatPadding="true">
 
-                <TextView
-                    android:id="@+id/time_remaining_textview"
+                <RelativeLayout
+                    android:paddingLeft="@dimen/big_padding"
+                    android:paddingRight="@dimen/big_padding"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:paddingTop="@dimen/big_padding"
-                    android:paddingBottom="@dimen/big_padding"
-                    android:gravity="center"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                    android:text="PLACEHOLDER"
-                    android:textSize="24sp"/>
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/outline_icon"
-                    android:layout_below="@id/time_remaining_textview"
-                    android:layout_marginBottom="@dimen/big_padding"
-                    android:layout_marginRight="@dimen/big_padding"
-                    android:layout_width="40dp"
-                    android:layout_height="72dp"
-                    android:src="@mipmap/ic_indicator"
-                    android:tint="@color/accent"/>
+                    <TextView
+                        android:id="@+id/time_remaining_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:gravity="center"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:text="PLACEHOLDER"
+                        android:textSize="24sp"/>
 
-                <TextView
-                    android:id="@+id/date_next_title_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="72dp"
-                    android:layout_below="@id/time_remaining_textview"
-                    android:paddingTop="@dimen/big_padding"
-                    android:paddingBottom="@dimen/big_padding"
-                    android:paddingRight="@dimen/small_padding"
-                    android:layout_toRightOf="@id/outline_icon"
-                    android:textSize="20sp"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif-condensed"
-                    android:textColor="@color/black"
-                    android:text="Next episode"/>
+                    <ImageView
+                        android:id="@+id/outline_icon"
+                        android:layout_below="@id/time_remaining_textview"
+                        android:layout_marginBottom="@dimen/big_padding"
+                        android:layout_marginRight="@dimen/big_padding"
+                        android:layout_width="40dp"
+                        android:layout_height="72dp"
+                        android:src="@mipmap/ic_indicator"
+                        android:tint="@color/accent"/>
 
-                <TextView
-                    android:id="@+id/date_next_textview"
+                    <TextView
+                        android:id="@+id/date_next_title_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="72dp"
+                        android:layout_below="@id/time_remaining_textview"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:paddingRight="@dimen/small_padding"
+                        android:layout_toRightOf="@id/outline_icon"
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:text="Next episode"/>
+
+                    <TextView
+                        android:id="@+id/date_next_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/date_next_title_textview"
+                        android:layout_below="@id/time_remaining_textview"
+                        android:gravity="center_vertical"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:paddingLeft="@dimen/small_padding"
+                        android:layout_toRightOf="@id/date_next_title_textview"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Next episode"/>
+
+                    <View
+                        android:id="@+id/first_divider"
+                        android:layout_below="@id/date_next_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_grey"
+                        android:layout_marginLeft="56dp"
+                        android:layout_marginRight="@dimen/small_padding"/>
+
+                    <ImageView
+                        android:id="@+id/info_icon"
+                        android:layout_below="@id/first_divider"
+                        android:layout_marginBottom="@dimen/big_padding"
+                        android:layout_marginRight="@dimen/big_padding"
+                        android:layout_width="40dp"
+                        android:layout_height="72dp"
+                        android:src="@mipmap/ic_indicator"
+                        android:tint="@color/accent"/>
+
+
+                    <TextView
+                        android:id="@+id/next_episode_title_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="72dp"
+                        android:layout_below="@id/first_divider"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:paddingRight="@dimen/small_padding"
+                        android:layout_toRightOf="@id/outline_icon"
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:text="Episode"/>
+
+                    <TextView
+                        android:id="@+id/next_episode_name_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/next_episode_title_textview"
+                        android:layout_below="@id/first_divider"
+                        android:gravity="center_vertical"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:paddingLeft="@dimen/small_padding"
+                        android:layout_toRightOf="@id/next_episode_title_textview"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Next episode"/>
+
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="2dp"
+                app:cardCornerRadius="2dp"
+                app:cardUseCompatPadding="true">
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/date_next_title_textview"
-                    android:layout_below="@id/time_remaining_textview"
-                    android:gravity="center_vertical"
-                    android:paddingTop="@dimen/big_padding"
-                    android:paddingBottom="@dimen/big_padding"
-                    android:paddingLeft="@dimen/small_padding"
-                    android:layout_toRightOf="@id/date_next_title_textview"
-                    android:textSize="20sp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="Next episode"/>
+                    android:layout_height="wrap_content">
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/time_remaining_textview2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:gravity="center"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:text="PLACEHOLDER"
+                        android:textSize="24sp"/>
 
-        </android.support.v7.widget.CardView>
+                    <ImageView
+                        android:id="@+id/outline_icon2"
+                        android:layout_below="@id/time_remaining_textview2"
+                        android:layout_marginBottom="@dimen/big_padding"
+                        android:layout_marginRight="@dimen/big_padding"
+                        android:layout_width="40dp"
+                        android:layout_height="72dp"
+                        android:src="@mipmap/ic_indicator"
+                        android:tint="@color/accent"/>
+
+                    <TextView
+                        android:id="@+id/date_next_title_textview2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="72dp"
+                        android:layout_below="@id/time_remaining_textview2"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:paddingRight="@dimen/small_padding"
+                        android:layout_toRightOf="@id/outline_icon2"
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:text="Next episode"/>
+
+                    <TextView
+                        android:id="@+id/date_next_textview2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/date_next_title_textview2"
+                        android:layout_below="@id/time_remaining_textview2"
+                        android:gravity="center_vertical"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:paddingLeft="@dimen/small_padding"
+                        android:layout_toRightOf="@id/date_next_title_textview2"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Next episode"/>
+
+                    <View
+                        android:id="@+id/first_divider2"
+                        android:layout_below="@id/date_next_textview2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_grey"
+                        android:layout_marginLeft="56dp"
+                        android:layout_marginRight="@dimen/small_padding"/>
+
+                    <ImageView
+                        android:id="@+id/info_icon2"
+                        android:layout_below="@id/first_divider2"
+                        android:layout_marginBottom="@dimen/big_padding"
+                        android:layout_marginRight="@dimen/big_padding"
+                        android:layout_width="40dp"
+                        android:layout_height="72dp"
+                        android:src="@mipmap/ic_indicator"
+                        android:tint="@color/accent"/>
+
+
+                    <TextView
+                        android:id="@+id/next_episode_title_textview2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="72dp"
+                        android:layout_below="@id/first_divider2"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:paddingRight="@dimen/small_padding"
+                        android:layout_toRightOf="@id/outline_icon2"
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:text="Episode"/>
+
+                    <TextView
+                        android:id="@+id/next_episode_name_textview2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/next_episode_title_textview2"
+                        android:layout_below="@id/first_divider2"
+                        android:gravity="center_vertical"
+                        android:paddingTop="@dimen/big_padding"
+                        android:paddingBottom="@dimen/big_padding"
+                        android:paddingLeft="@dimen/small_padding"
+                        android:layout_toRightOf="@id/next_episode_title_textview2"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Next episode"/>
+
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
 
 
     </ScrollView>

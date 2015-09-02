@@ -9,11 +9,8 @@ import com.dexafree.seriescountdown.model.SerieInfo;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.joda.time.Duration;
-import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
 
@@ -45,6 +42,7 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
         view.showTimeRemaining(timeUntilNextEpisode);
         view.showNextEpisodeDate(info.getDateNextEpisode());
+        view.showNExtEpisodeNumber(info.getNextEpisode());
     }
 
     private String getTimeUntilNextEpisode(String dateNextEpisode){
