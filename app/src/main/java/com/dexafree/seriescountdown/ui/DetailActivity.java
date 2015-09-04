@@ -30,6 +30,7 @@ import com.dexafree.seriescountdown.interfaces.DetailView;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.model.SerieInfo;
 import com.dexafree.seriescountdown.presenters.DetailPresenter;
+import com.dexafree.seriescountdown.ui.views.MaterialRow;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -50,11 +51,20 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Bind(R.id.time_remaining_textview)
     TextView timeRemainingTextView;
 
-    @Bind(R.id.date_next_textview)
-    TextView dateNextTextView;
+    @Bind(R.id.next_episode_date_row)
+    MaterialRow dateRow;
 
-    @Bind(R.id.next_episode_name_textview)
-    TextView nextTitleTextView;
+    @Bind(R.id.next_episode_name_row)
+    MaterialRow nameRow;
+
+    @Bind(R.id.serie_start_row)
+    MaterialRow serieStartRow;
+
+    @Bind(R.id.serie_end_row)
+    MaterialRow serieEndRow;
+
+    @Bind(R.id.serie_genres_row)
+    MaterialRow serieGenresRow;
 
     @Bind(R.id.detail_content)
     LinearLayout detailContent;
@@ -124,12 +134,33 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
     @Override
     public void showNextEpisodeDate(String text) {
-        dateNextTextView.setText(text);
+        dateRow.setRowContent(text);
+        dateRow.setHintText("Emission date");
+        dateRow.setImage(R.mipmap.ic_next_emission);
     }
 
     @Override
     public void showNextEpisodeNumber(String text) {
-        nextTitleTextView.setText(text);
+        nameRow.setRowContent(text);
+        nameRow.setHintText("Next episode");
+    }
+
+    @Override
+    public void showSerieStart(String text) {
+        serieStartRow.setRowContent(text);
+        serieStartRow.setHintText("Starting emission");
+    }
+
+    @Override
+    public void showSerieEnd(String text) {
+        serieEndRow.setRowContent(text);
+        serieEndRow.setHintText("Final emission");
+    }
+
+    @Override
+    public void showSerieGenres(String text) {
+        serieGenresRow.setRowContent(text);
+        serieGenresRow.setHintText("Genres");
     }
 
     @Override

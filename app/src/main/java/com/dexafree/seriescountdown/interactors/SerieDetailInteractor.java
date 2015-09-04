@@ -82,11 +82,18 @@ public class SerieDetailInteractor {
         Element endElement = categories.get(4);
         Element timeRemainingNext = doc.select(NEXT_EPISODE_REMAINING).first();
 
-        String genre = genreElement.text();
+        String genreRaw = genreElement.text().split(": ")[1];
         String status = statusElement.text();
-        String start = startElement.text();
-        String end = endElement.text();
+        String start = startElement.text().split(": ")[1];
+        String end = endElement.text().split(": ")[1];
 
+
+        String[] genreSplits = genreRaw.split("\\|");
+        String genre = genreSplits[0].trim();
+
+        for(int i=1;i<genreSplits.length;i++){
+            genre += (", " + genreSplits[i].trim());
+        }
 
         String timeRemainingNextEpisode = null;
 
