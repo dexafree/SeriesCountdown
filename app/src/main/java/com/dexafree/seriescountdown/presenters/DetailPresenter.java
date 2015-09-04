@@ -36,8 +36,7 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
         boolean isSerieInserted = favoriteSeriesInteractor.isSerieInserted(serie);
 
-        Log.d("DETAILPRESENTER", "ISSERIEINSERTED: " + isSerieInserted);
-
+        // Little hack to prevent null MenuItem on rotation
         new Handler().postDelayed(() -> view.setFavoritable(!isSerieInserted), 250);
 
 
@@ -58,6 +57,10 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
     }
 
     private String getTimeUntilNextEpisode(String dateNextEpisode){
+
+        if(dateNextEpisode == null){
+            return "Unavailable";
+        }
 
         String pattern = "MMMMM dd, yyyy HH:mm:ss";
 

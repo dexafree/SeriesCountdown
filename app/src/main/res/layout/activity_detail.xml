@@ -2,13 +2,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:background="?colorPrimary">
+        android:background="?colorPrimary"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
@@ -17,6 +19,7 @@
             app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
             app:expandedTitleMarginStart="72dp"
+            android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:clickable="true">
@@ -86,7 +89,7 @@
                         android:paddingBottom="@dimen/big_padding"
                         android:gravity="center"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                        android:text="PLACEHOLDER"
+                        android:fontFamily="sans-serif-condensed"
                         android:textSize="24sp"/>
 
                     <ImageView
@@ -199,21 +202,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/time_remaining_textview2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:paddingTop="@dimen/big_padding"
-                        android:paddingBottom="@dimen/big_padding"
-                        android:gravity="center"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                        android:text="PLACEHOLDER"
-                        android:textSize="24sp"/>
 
                     <ImageView
                         android:id="@+id/outline_icon2"
-                        android:layout_below="@id/time_remaining_textview2"
+                        android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/big_padding"
                         android:layout_marginRight="@dimen/big_padding"
                         android:layout_width="40dp"
@@ -225,7 +217,7 @@
                         android:id="@+id/date_next_title_textview2"
                         android:layout_width="wrap_content"
                         android:layout_height="72dp"
-                        android:layout_below="@id/time_remaining_textview2"
+                        android:layout_alignParentTop="true"
                         android:paddingTop="@dimen/big_padding"
                         android:paddingBottom="@dimen/big_padding"
                         android:paddingRight="@dimen/small_padding"
@@ -242,7 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@id/date_next_title_textview2"
-                        android:layout_below="@id/time_remaining_textview2"
+                        android:layout_alignParentTop="true"
                         android:gravity="center_vertical"
                         android:paddingTop="@dimen/big_padding"
                         android:paddingBottom="@dimen/big_padding"
@@ -310,7 +302,17 @@
 
         </LinearLayout>
 
-
     </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/favorite_fab"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right|end"
+        android:src="@mipmap/ic_star"
+        android:layout_margin="16dp"
+        android:clickable="true"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

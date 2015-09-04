@@ -1,8 +1,10 @@
 package com.dexafree.seriescountdown.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
@@ -32,6 +34,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Carlos on 1/9/15.
@@ -56,7 +59,13 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Bind(R.id.detail_content)
     LinearLayout detailContent;
 
-    private MenuItem starItem;
+    @Bind(R.id.favorite_fab)
+    FloatingActionButton favoriteFAB;
+
+    @OnClick(R.id.favorite_fab)
+    void onFabClicked(){
+        presenter.onSaveSerieClicked();
+    }
 
     private Serie mSerie;
     private DetailPresenter presenter;
@@ -138,11 +147,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
         int drawable = favoritable ?  R.mipmap.ic_star : R.mipmap.ic_starred;
 
-        if(starItem != null) {
-            starItem.setIcon(drawable);
-        } else {
-            Log.d("DETAILACTIVITY", "STARITEM WAS NULL");
-        }
+        favoriteFAB.setImageResource(drawable);
     }
 
     private void loadFullSizeImage(){
@@ -306,14 +311,6 @@ public class DetailActivity extends BaseActivity implements DetailView {
         return false;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        starItem = menu.getItem(0);
-        Log.d("DETAILACTIVITY", "MENU SIZE: "+menu.size());
-
-        return super.onCreateOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -333,7 +330,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void launch(BaseActivity activity, View transitionView, Serie serie) {
+    public static void launch(Activity activity, View transitionView, Serie serie) {
         ActivityOptionsCompat options =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
                         activity, transitionView, EXTRA_IMAGE);

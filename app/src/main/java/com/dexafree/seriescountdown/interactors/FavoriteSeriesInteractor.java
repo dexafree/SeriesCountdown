@@ -24,7 +24,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by Carlos on 2/9/15.
  */
-public class FavoriteSeriesInteractor {
+public class FavoriteSeriesInteractor extends BaseSeriesInteractor {
 
     private SQLiteDatabase database;
 
@@ -32,7 +32,7 @@ public class FavoriteSeriesInteractor {
         this.database = new DatabaseOpenHelper(view.getContext()).getWritableDatabase();
     }
 
-    public Subscription loadData(Observer<Serie> observer) {
+    public Subscription loadSeries(Observer<Serie> observer) {
 
         Cursor cursor = database.rawQuery(FavoriteSeriesTable.QUERY_ALL, null);
 
@@ -44,14 +44,23 @@ public class FavoriteSeriesInteractor {
 
     }
 
+    public void reloadSeries(Observer<List<Serie>> observer){
+        Cursor cursor = database.rawQuery(FavoriteSeriesTable.QUERY_ALL, null);
+
+        Observable.just(cursor)
+            .map(this::mapCursorToSeriesList)
+            .asObservable()
+            .subscribe(observer);
+    }
+
 
     public boolean isSerieInserted(Serie serie){
 
-        Log.d("FAVORITESERIESINTERACTOR", "BEFORE ISSERIEINSERTED");
+        //Log.d("FAVORITESERIESINTERACTOR", "BEFORE ISSERIEINSERTED");
         Cursor cursor = database.rawQuery(FavoriteSeriesTable.queryForSerie(serie), null);
         int numSeries = mapCursorToSeriesList(cursor).size();
 
-        Log.d("FAVORITESERIESINTERACTOR", "AFTER ISSERIEINSERTED");
+        //Log.d("FAVORITESERIESINTERACTOR", "AFTER ISSERIEINSERTED");
 
         return numSeries > 0;
     }
@@ -64,17 +73,17 @@ public class FavoriteSeriesInteractor {
             values.put(FavoriteSeriesTable.COLUMN_CODENAME, serie.getCodeName());
             values.put(FavoriteSeriesTable.IMAGE_URL, serie.getImageUrl());
 
-            Log.d("FAVORITESERIESINTERACTOR", "BEFORE SAVE_SERIE");
+            //Log.d("FAVORITESERIESINTERACTOR", "BEFORE SAVE_SERIE");
             database.insert(FavoriteSeriesTable.TABLE, null, values);
-            Log.d("FAVORITESERIESINTERACTOR", "AFTER SAVE_SERIE");
+            //Log.d("FAVORITESERIESINTERACTOR", "AFTER SAVE_SERIE");
         }
     }
 
     public void deleteSerie(Serie serie){
-        Log.d("FAVORITESERIESINTERACTOR", "BEFORE DELETE_SERIE");
+        //Log.d("FAVORITESERIESINTERACTOR", "BEFORE DELETE_SERIE");
         database.delete(FavoriteSeriesTable.TABLE, FavoriteSeriesTable.COLUMN_NAME + " = ?", new String[]{serie.getName()});
         database.rawQuery(FavoriteSeriesTable.deleteQueryForSerie(serie), null);
-        Log.d("FAVORITESERIESINTERACTOR", "AFTER DELETE_SERIE");
+        //Log.d("FAVORITESERIESINTERACTOR", "AFTER DELETE_SERIE");
 
     }
 
@@ -92,5 +101,11 @@ public class FavoriteSeriesInteractor {
 
         return series;
 
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        database.close();
     }
 }

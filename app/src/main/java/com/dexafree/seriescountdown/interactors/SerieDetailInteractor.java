@@ -58,8 +58,21 @@ public class SerieDetailInteractor {
 
     private void parseDocument(Document doc){
 
-        String nextEpisode = doc.select(NEXT_EPISODE_SELECTOR).first().text();
-        String nextEpisodeDate = doc.select(NEXT_EPISODE_DATE_SELECTOR).first().text();
+        String nextEpisode = "Unavailable";
+
+        Element nextEpisodeElement = doc.select(NEXT_EPISODE_SELECTOR).first();
+
+        if(nextEpisodeElement != null){
+            nextEpisode = nextEpisodeElement.text();
+        }
+
+        String nextEpisodeDate = "Unknown";
+
+        Element nextEpisodeDateElement = doc.select(NEXT_EPISODE_DATE_SELECTOR).first();
+
+        if(nextEpisodeDateElement != null){
+            nextEpisodeDate = nextEpisodeDateElement.text();
+        }
 
         Elements categories = doc.select(SERIE_CATEGORIES);
 
@@ -75,7 +88,12 @@ public class SerieDetailInteractor {
         String end = endElement.text();
 
 
-        String timeRemainingNextEpisode = timeRemainingNext.attr("data-date");
+        String timeRemainingNextEpisode = null;
+
+        if(timeRemainingNext != null){
+            timeRemainingNextEpisode = timeRemainingNext.attr("data-date");
+        }
+
 
         Log.d("SERIEDETAILINTERACTOR", "TIME REMAINING: "+timeRemainingNextEpisode);
 

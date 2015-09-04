@@ -9,6 +9,11 @@ import java.util.List;
  */
 public interface SeriesView extends IBaseView {
 
-    void showSeries(List<Serie> series);
+    void addItem(Serie serie);
+    void updateSeries(List<Serie> series);
     void showError();
+    void clearList();
+
+    void startDetailActivity(int index);
+
 }

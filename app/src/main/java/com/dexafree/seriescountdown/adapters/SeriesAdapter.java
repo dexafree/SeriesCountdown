@@ -44,8 +44,8 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
         holder.text.setText(item.getName());
         holder.image.setImageBitmap(null);
 
-        Picasso.with(holder.image.getContext())
-                .cancelRequest(holder.image);
+        /*Picasso.with(holder.image.getContext())
+                .cancelRequest(holder.image);*/
 
         Picasso.with(holder.image.getContext())
                 .load(item.getImageUrl())
@@ -64,6 +64,48 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
     public void addItem(Serie serie){
         seriesList.add(serie);
         notifyItemInserted(seriesList.size()-1);
+    }
+
+    public void setList(List<Serie> series){
+
+        int currentSize = seriesList.size();
+        int newSize = series.size();
+
+        if(currentSize > newSize){
+            checkDeletions(series);
+        } else {
+            checkAdditions(series);
+        }
+
+    }
+
+    private void checkAdditions(List<Serie> series){
+        for(int i=0;i<series.size(); i++){
+
+            Serie serie = series.get(i);
+
+            if(!seriesList.contains(serie)){
+                seriesList.add(serie);
+                notifyItemInserted(seriesList.size()-1);
+                break;
+            }
+        }
+    }
+
+    private void checkDeletions(List<Serie> series){
+        for(int i=0;i<seriesList.size(); i++){
+
+            if(!series.contains(seriesList.get(i))){
+                seriesList.remove(i);
+                notifyItemRemoved(i);
+                break;
+            }
+        }
+    }
+
+    public void clearItems(){
+        seriesList.clear();
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

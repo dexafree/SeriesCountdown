@@ -1,74 +1,72 @@
 package com.dexafree.seriescountdown.interactors;
 
-import android.util.Log;
-
-import com.arasthel.asyncjob.AsyncJob;
 import com.dexafree.seriescountdown.model.Serie;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Carlos on 1/9/15.
  */
 public class PopularSeriesInteractor extends BaseSeriesInteractor {
 
-    private final static String POPULAR_SERIES_ENDPOINT = "http://www.episodate.com/most-popular";
+
+    private final static String POPULAR_SERIES_ENDPOINT = "http://www.episodate.com/most-popular?page=";
 
     private final static String BLOCK_SELECTOR = "div.mix-border > a";
     private final static String IMAGE_SELECTOR = "div.image-block";
     private final static String TITLE_SELECTOR = "span.sorting-cover > span";
 
-    public PopularSeriesInteractor(Callback callback) {
-        super(callback);
+
+    public Subscription loadSeries(Observer<Serie> subscriber, int page) {
+
+        return getObservable(page)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(subscriber);
+
     }
 
-    @Override
-    public void loadSeries() {
+    private Observable<Serie> getObservable(int page){
 
-        AsyncJob.doInBackground(new AsyncJob.OnBackgroundJob() {
-            @Override
-            public void doOnBackground() {
+        return Observable.just(POPULAR_SERIES_ENDPOINT + page)
+                .map(this::getElementsFromUrl)
+                .flatMap(Observable::from)
+                .map(this::getSerieFromElement);
 
-                try {
-                    Document doc = Jsoup.connect(POPULAR_SERIES_ENDPOINT)
-                            .timeout(5000)
-                            .get();
+    }
 
-                    parseDocument(doc);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    sendError();
-                }
+    private List<Element> getElementsFromUrl(String url){
+
+            try {
+                return Jsoup.connect(url)
+                        .timeout(5000)
+                        .get()
+                        .select(BLOCK_SELECTOR);
+
+            } catch (IOException e){
+                e.printStackTrace();
+                return null;
             }
-        });
     }
 
-    private void parseDocument(Document doc){
+    private Serie getSerieFromElement(Element element){
+        String name = getName(element);
+        String codeName = getCodeName(element);
+        String imageUrl = getImageUrl(element);
 
-        List<Serie> series = new ArrayList<>();
-
-        Elements blocks = doc.select(BLOCK_SELECTOR);
-
-        for(Element element : blocks){
-
-            String name = getName(element);
-            String codeName = getCodeName(element);
-            String imageUrl = getImageUrl(element);
-
-            series.add(new Serie(name, codeName, imageUrl));
-        }
-
-        sendResult(series);
-
+        return new Serie(name, codeName, imageUrl);
     }
 
     private String getName(Element element){
@@ -85,7 +83,7 @@ public class PopularSeriesInteractor extends BaseSeriesInteractor {
         Element imageBlock = element.select(IMAGE_SELECTOR).first();
         String style = imageBlock.attr("style");
 
-        Pattern pattern = Pattern.compile("(http.*\\.jpg)");
+        Pattern pattern = Pattern.compile("(http.*\\.(jpg|png|jpe)?)");
 
         Matcher matcher = pattern.matcher(style);
 
@@ -93,9 +91,11 @@ public class PopularSeriesInteractor extends BaseSeriesInteractor {
 
         if(matcher.find()){
             imageUrl = matcher.group();
+
         }
 
         return imageUrl;
 
     }
+
 }
