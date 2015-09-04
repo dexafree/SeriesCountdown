@@ -2,11 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="72dp">
+    android:layout_height="wrap_content"
+    android:minHeight="72dp">
 
     <ImageView
         android:id="@+id/row_image"
-        android:layout_marginBottom="@dimen/big_padding"
         android:layout_marginRight="@dimen/big_padding"
         android:layout_width="40dp"
         android:layout_height="match_parent"
