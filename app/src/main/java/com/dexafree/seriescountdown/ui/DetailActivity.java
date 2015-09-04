@@ -77,6 +77,11 @@ public class DetailActivity extends BaseActivity implements DetailView {
         presenter.onSaveSerieClicked();
     }
 
+    @OnClick(R.id.serie_image)
+    void onImageClicked(){
+        ShowImageActivity.launch(this, serieImage, mSerie);
+    }
+
     private Serie mSerie;
     private DetailPresenter presenter;
 
