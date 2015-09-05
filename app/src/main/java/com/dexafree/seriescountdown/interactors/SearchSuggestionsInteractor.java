@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,16 +25,16 @@ public class SearchSuggestionsInteractor {
 
     private final static String SUGGESTIONS_API_ENDPOINT = "http://www.episodate.com/api/search-suggestions?query=";
 
-
     public Subscription loadSuggestions(String query, Observer<List<String>> observer){
 
         String url = SUGGESTIONS_API_ENDPOINT + Uri.encode(query);
 
         return Observable.just(url)
                 .map(this::getContentFromUrl)
-                .map(content -> content.replace("\\[", "").replace("\\]", "").replace("\"", ""))
-                .map(prepared -> prepared.split(", "))
+                .map(content -> content.replace("[", "").replace("]", "").replace("\"", ""))
+                .map(prepared -> prepared.split(","))
                 .map(Arrays::asList)
+                .map(this::removeIfEmpty)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
@@ -66,7 +67,17 @@ public class SearchSuggestionsInteractor {
             e.printStackTrace();
         }
 
-    return null;
+        return null;
 
+    }
+
+    private List<String> removeIfEmpty(List<String> responses){
+        if(responses.size() == 1){
+            String first = responses.get(0);
+            if(first.equals("")){
+                return new ArrayList<>();
+            }
+        }
+        return responses;
     }
 }
