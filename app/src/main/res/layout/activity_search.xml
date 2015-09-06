@@ -14,9 +14,8 @@
         android:background="@color/primary" />
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/content_layout"
-        android:orientation="vertical"
         android:paddingLeft="@dimen/big_padding"
         android:paddingRight="@dimen/big_padding"
         android:layout_width="match_parent"
@@ -27,14 +26,25 @@
             android:id="@+id/search_edittext"
             android:padding="@dimen/big_padding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/search_button"/>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SEARCH"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/series_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_below="@id/search_edittext"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>

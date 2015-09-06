@@ -2,6 +2,11 @@ package com.dexafree.seriescountdown.interactors;
 
 import android.net.Uri;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,16 +30,13 @@ public class SearchSuggestionsInteractor {
 
     private final static String SUGGESTIONS_API_ENDPOINT = "http://www.episodate.com/api/search-suggestions?query=";
 
-    public Subscription loadSuggestions(String query, Observer<List<String>> observer){
+    public Subscription loadSuggestions(Observer<List<String>> observer, String query){
 
         String url = SUGGESTIONS_API_ENDPOINT + Uri.encode(query);
 
         return Observable.just(url)
                 .map(this::getContentFromUrl)
-                .map(content -> content.replace("[", "").replace("]", "").replace("\"", ""))
-                .map(prepared -> prepared.split(","))
-                .map(Arrays::asList)
-                .map(this::removeIfEmpty)
+                .map(this::parseResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
@@ -71,13 +73,18 @@ public class SearchSuggestionsInteractor {
 
     }
 
-    private List<String> removeIfEmpty(List<String> responses){
-        if(responses.size() == 1){
-            String first = responses.get(0);
-            if(first.equals("")){
-                return new ArrayList<>();
-            }
+    private List<String> parseResponse(String response){
+
+        List<String> series = new ArrayList<>();
+
+        Gson gson = new GsonBuilder().create();
+        JsonArray jsonResponse = gson.fromJson(response, JsonArray.class);
+
+        for(JsonElement element : jsonResponse){
+            series.add(element.getAsString());
         }
-        return responses;
+
+        return series;
     }
+
 }

@@ -73,6 +73,8 @@ dependencies {
     compile 'com.jakewharton.rxbinding:rxbinding-design:0.2.0'
     compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.2.0'
 
+    compile 'com.google.code.gson:gson:2.3.1'
+
     compile 'org.jsoup:jsoup:1.8.2'
     compile 'joda-time:joda-time:2.8.2'
 

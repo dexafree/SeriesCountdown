@@ -19,10 +19,11 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Carlos on 1/9/15.
  */
-public class PopularSeriesInteractor extends BaseSeriesInteractor {
+public class GetSeriesInteractor extends BaseSeriesInteractor {
 
 
     private final static String POPULAR_SERIES_ENDPOINT = "http://www.episodate.com/most-popular?page=";
+    private final static String SEARCH_SERIES_ENDPOINT = "http://www.episodate.com/search?q=%s&page=";
 
     private final static String BLOCK_SELECTOR = "div.mix-border > a";
     private final static String IMAGE_SELECTOR = "div.image-block";
@@ -31,16 +32,25 @@ public class PopularSeriesInteractor extends BaseSeriesInteractor {
 
     public Subscription loadSeries(Observer<Serie> subscriber, int page) {
 
-        return getObservable(page)
+        return getObservable(POPULAR_SERIES_ENDPOINT, page)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(subscriber);
 
     }
 
-    private Observable<Serie> getObservable(int page){
+    public Subscription searchSeries(Observer<Serie> subscriber, String query, int page){
+        String url = SEARCH_SERIES_ENDPOINT.replace("%s", query);
 
-        return Observable.just(POPULAR_SERIES_ENDPOINT + page)
+        return getObservable(url, page)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(subscriber);
+    }
+
+    private Observable<Serie> getObservable(String endpoint, int page){
+
+        return Observable.just(endpoint + page)
                 .map(this::getElementsFromUrl)
                 .flatMap(Observable::from)
                 .map(this::getSerieFromElement);

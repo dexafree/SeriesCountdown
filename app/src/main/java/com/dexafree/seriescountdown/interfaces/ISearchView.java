@@ -7,9 +7,13 @@ import java.util.List;
 /**
  * Created by Carlos on 5/9/15.
  */
-public interface ISearchView {
+public interface ISearchView  {
+
 
     void showSuggestions(List<String> suggestions);
-    void showSeries(List<Serie> series);
+    void addSerie(Serie serie);
+    void cleanList();
+
+    void showSearchError();
 
 }
