@@ -102,8 +102,6 @@ public class SerieDetailInteractor {
         }
 
 
-        Log.d("SERIEDETAILINTERACTOR", "TIME REMAINING: "+timeRemainingNextEpisode);
-
         SerieInfo info = new SerieInfo(genre, status, start, end, timeRemainingNextEpisode, nextEpisode, nextEpisodeDate);
         sendResults(info);
 

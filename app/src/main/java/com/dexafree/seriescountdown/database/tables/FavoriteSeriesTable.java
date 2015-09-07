@@ -26,7 +26,7 @@ public class FavoriteSeriesTable {
     public static final String IMAGE_URL = "image_url";
 
     @NonNull
-    public static final String QUERY_ALL = "SELECT * FROM "+TABLE;
+    public static final String QUERY_ALL = "SELECT * FROM " + TABLE;
 
     // This is just class with Meta Data, we don't need instances
     private FavoriteSeriesTable() {

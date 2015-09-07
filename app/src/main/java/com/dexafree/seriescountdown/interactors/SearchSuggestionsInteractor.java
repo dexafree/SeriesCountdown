@@ -70,7 +70,6 @@ public class SearchSuggestionsInteractor {
         }
 
         return null;
-
     }
 
     private List<String> parseResponse(String response){

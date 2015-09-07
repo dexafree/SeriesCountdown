@@ -1,10 +1,14 @@
 package com.dexafree.seriescountdown.ui;
 
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.dexafree.seriescountdown.R;
@@ -14,6 +18,7 @@ import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.presenters.SearchPresenter;
 import com.dexafree.seriescountdown.utils.RecyclerClickListener;
 import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
+import rx.functions.Action1;
 
 /**
  * Created by Carlos on 5/9/15.
@@ -43,7 +49,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
 
     @OnClick(R.id.search_button)
     void onSearchButtonClick(){
-        searchText();
+        String query = searchEditText.getText().toString();
+        presenter.searchText(query);
     }
 
     private SearchPresenter presenter;
@@ -60,6 +67,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     }
 
     private void prepareLists(){
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RxTextView
                 .textChangeEvents(searchEditText)
@@ -126,5 +135,28 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     @Override
     public void showSearchError() {
         showToast("Search error");
+    }
+
+    @Override
+    public boolean isShowingSerie(Serie serie) {
+        return seriesAdapter.isShowingSerie(serie);
+    }
+
+    public void startDetailActivity(int position){
+
+        View view = seriesRecyclerView.findViewHolderForAdapterPosition(position).itemView;
+
+        Serie serie = (Serie) view.getTag();
+        ImageView image = (ImageView) view.findViewById(R.id.serie_image);
+
+        DetailActivity.launch(this, image, serie);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            ActivityCompat.finishAfterTransition(this);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

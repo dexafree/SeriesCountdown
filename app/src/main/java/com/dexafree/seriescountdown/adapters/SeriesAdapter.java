@@ -1,8 +1,6 @@
 package com.dexafree.seriescountdown.adapters;
 
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.model.Serie;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
@@ -21,9 +18,6 @@ import java.util.List;
  */
 public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder> {
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
 
     private List<Serie> seriesList;
 
@@ -106,6 +100,10 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
     public void clearItems(){
         seriesList.clear();
         notifyDataSetChanged();
+    }
+
+    public boolean isShowingSerie(Serie serie){
+        return seriesList.contains(serie);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -13,7 +13,9 @@ public interface ISearchView  {
     void showSuggestions(List<String> suggestions);
     void addSerie(Serie serie);
     void cleanList();
-
     void showSearchError();
+
+    boolean isShowingSerie(Serie serie);
+    void startDetailActivity(int position);
 
 }

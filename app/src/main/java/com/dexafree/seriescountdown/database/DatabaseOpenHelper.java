@@ -10,8 +10,10 @@ import com.dexafree.seriescountdown.database.tables.FavoriteSeriesTable;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
+    private final static String DATABASE_NAME = "Favorites.db";
+
     public DatabaseOpenHelper(@NonNull Context context) {
-        super(context, "sample_db", null, 1);
+        super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
@@ -21,6 +23,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
-        // no impl
+        // Not implemented
     }
 }

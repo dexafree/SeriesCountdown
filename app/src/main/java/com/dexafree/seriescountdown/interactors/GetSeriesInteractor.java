@@ -1,11 +1,20 @@
 package com.dexafree.seriescountdown.interactors;
 
+import android.util.Log;
+
 import com.dexafree.seriescountdown.model.Serie;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,14 +34,21 @@ public class GetSeriesInteractor extends BaseSeriesInteractor {
     private final static String POPULAR_SERIES_ENDPOINT = "http://www.episodate.com/most-popular?page=";
     private final static String SEARCH_SERIES_ENDPOINT = "http://www.episodate.com/search?q=%s&page=";
 
+
     private final static String BLOCK_SELECTOR = "div.mix-border > a";
     private final static String IMAGE_SELECTOR = "div.image-block";
     private final static String TITLE_SELECTOR = "span.sorting-cover > span";
 
 
+    private final static String REDIRECTED_TITLE_SELECTOR = ".breadcrumbs > .container > .pull-left";
+    private final static String REDIRECTED_IMAGE_SELECTOR = "img.img-responsive";
+
+
     public Subscription loadSeries(Observer<Serie> subscriber, int page) {
 
-        return getObservable(POPULAR_SERIES_ENDPOINT, page)
+        String url = POPULAR_SERIES_ENDPOINT + page;
+
+        return getObservable(url)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(subscriber);
@@ -40,17 +56,78 @@ public class GetSeriesInteractor extends BaseSeriesInteractor {
     }
 
     public Subscription searchSeries(Observer<Serie> subscriber, String query, int page){
-        String url = SEARCH_SERIES_ENDPOINT.replace("%s", query);
 
-        return getObservable(url, page)
+        String urlWithoutPageIndex = SEARCH_SERIES_ENDPOINT.replace("%s", query).replace(" ", "+") + 1;
+        String urlWithPageIndex = SEARCH_SERIES_ENDPOINT.replace("%s", query).replace(" ", "+") + page;
+
+        return Observable.just(urlWithoutPageIndex)
+                .flatMap(this::getSearchInfo)
+                .flatMap(searchResponse -> {
+                    if (searchResponse != null) {
+                        if (urlWithoutPageIndex.equalsIgnoreCase(searchResponse.connectedUrl)) {
+                            return getObservable(urlWithPageIndex);
+                        } else {
+                            return getSingleSerie(searchResponse.content, searchResponse.connectedUrl);
+                        }
+                    } else {
+                        return Observable.just(null);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(subscriber);
     }
 
-    private Observable<Serie> getObservable(String endpoint, int page){
+    private Observable<SearchResponse> getSearchInfo(String urlString){
+        try{
 
-        return Observable.just(endpoint + page)
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setInstanceFollowRedirects(true);
+
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+
+            String connectedUrl = conn.getURL().toString();
+
+            String response = "";
+
+            BufferedReader buffer = new BufferedReader(
+                    new InputStreamReader(in));
+            String s;
+            while ((s = buffer.readLine()) != null) {
+                response += s;
+            }
+
+            SearchResponse searchResponse = new SearchResponse(response, connectedUrl);
+            return Observable.just(searchResponse);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Observable.just(null);
+    }
+
+    private Observable<Serie> getSingleSerie(String content, String connectedUrl){
+        Document doc = Jsoup.parse(content);
+
+        String title = doc.select(REDIRECTED_TITLE_SELECTOR).text();
+        String[] codeNameSplits = connectedUrl.split("/");
+        String codeName = codeNameSplits[codeNameSplits.length-1];
+
+        String imageUrl = doc.select(REDIRECTED_IMAGE_SELECTOR).attr("src").replace("full", "thumbnail");
+
+        Serie serie = new Serie(title, codeName, imageUrl);
+
+        return Observable.just(serie);
+
+    }
+
+
+    private Observable<Serie> getObservable(String endpoint){
+
+        return Observable.just(endpoint)
                 .map(this::getElementsFromUrl)
                 .flatMap(Observable::from)
                 .map(this::getSerieFromElement);
@@ -93,19 +170,26 @@ public class GetSeriesInteractor extends BaseSeriesInteractor {
         Element imageBlock = element.select(IMAGE_SELECTOR).first();
         String style = imageBlock.attr("style");
 
-        Pattern pattern = Pattern.compile("(http.*\\.(jpg|png|jpe)?)");
-
-        Matcher matcher = pattern.matcher(style);
-
         String imageUrl = "NONE";
 
-        if(matcher.find()){
-            imageUrl = matcher.group();
-
+        Matcher matcher = Pattern.compile("\\((.*?)\\)").matcher(style);
+        if(matcher.find()) {
+            imageUrl = matcher.group(1);
         }
 
-        return imageUrl;
 
+
+        return imageUrl;
+    }
+
+    private static class SearchResponse {
+        String content;
+        String connectedUrl;
+
+        public SearchResponse(String content, String connectedUrl) {
+            this.content = content;
+            this.connectedUrl = connectedUrl;
+        }
     }
 
 }

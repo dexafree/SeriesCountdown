@@ -66,7 +66,7 @@ public abstract class BaseSerieListFragment<T extends BaseSerieListPresenter> ex
             }
         });
         seriesRecyclerView.setItemAnimator(new FadeInUpAnimator());
-        seriesRecyclerView.getItemAnimator().setAddDuration(1000);
+        seriesRecyclerView.getItemAnimator().setAddDuration(800);
         seriesRecyclerView.getItemAnimator().setRemoveDuration(300);
         seriesRecyclerView.addOnItemTouchListener(new RecyclerClickListener(getContext(),
                 (view, position) -> presenter.onItemClicked(position)));

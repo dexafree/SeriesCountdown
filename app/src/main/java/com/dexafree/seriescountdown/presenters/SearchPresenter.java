@@ -1,6 +1,8 @@
 package com.dexafree.seriescountdown.presenters;
 
 
+import android.util.Log;
+
 import com.dexafree.seriescountdown.interactors.GetSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SearchSuggestionsInteractor;
 import com.dexafree.seriescountdown.interfaces.ISearchView;
@@ -25,7 +27,6 @@ public class SearchPresenter {
 
     private int searchPage;
 
-
     private final Observer<Serie> getSeriesObserver = new Observer<Serie>() {
         @Override
         public void onCompleted() {
@@ -39,7 +40,11 @@ public class SearchPresenter {
 
         @Override
         public void onNext(Serie serie) {
-            view.addSerie(serie);
+            if(view.isShowingSerie(serie)){
+                searchPage = 0;
+            } else {
+                view.addSerie(serie);
+            }
         }
     };
 
@@ -73,17 +78,20 @@ public class SearchPresenter {
     }
 
     public void onScrollFinished(String query){
-        if(getSeriesSubscription == null || getSeriesSubscription.isUnsubscribed()) {
-            this.getSeriesSubscription = getSeriesInteractor.searchSeries(getSeriesObserver, query, searchPage++);
+        if(searchPage >= 1) {
+            if (getSeriesSubscription == null || getSeriesSubscription.isUnsubscribed()) {
+                this.getSeriesSubscription = getSeriesInteractor.searchSeries(getSeriesObserver, query, searchPage++);
+            }
         }
     }
 
     public void searchText(String text){
         view.cleanList();
+        this.searchPage = 1;
         this.getSeriesSubscription = getSeriesInteractor.searchSeries(getSeriesObserver, text, searchPage++);
     }
 
     public void onItemClicked(int position){
-
+        view.startDetailActivity(position);
     }
 }
