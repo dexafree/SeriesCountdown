@@ -72,6 +72,7 @@ public class SearchActivity extends BaseActivity implements ISearchView {
 
         RxTextView
                 .textChangeEvents(searchEditText)
+                .filter(event -> event.text().length() >= 3)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .subscribe(event -> presenter.onTextChanged(event.text().toString()));
 
