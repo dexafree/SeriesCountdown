@@ -65,6 +65,7 @@ dependencies {
     compile 'com.arasthel:asyncjob-library:1.0.3'
     compile 'jp.wasabeef:recyclerview-animators:1.2.2'
 
+    compile "org.functionaljava:functionaljava:4.4"
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'

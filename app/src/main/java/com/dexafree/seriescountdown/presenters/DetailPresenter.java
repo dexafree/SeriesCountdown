@@ -5,29 +5,33 @@ import android.util.Log;
 
 import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SerieDetailInteractor;
+import com.dexafree.seriescountdown.interactors.SerieDetailNewApiInteractor;
 import com.dexafree.seriescountdown.interfaces.DetailView;
+import com.dexafree.seriescountdown.model.CountDown;
 import com.dexafree.seriescountdown.model.Serie;
+import com.dexafree.seriescountdown.model.SerieDetail;
 import com.dexafree.seriescountdown.model.SerieInfo;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
 
 /**
  * Created by Carlos on 2/9/15.
  */
-public class DetailPresenter implements SerieDetailInteractor.Callback {
+public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
 
     private DetailView view;
-    private SerieDetailInteractor interactor;
+    private SerieDetailNewApiInteractor interactor;
     private FavoriteSeriesInteractor favoriteSeriesInteractor;
 
     public DetailPresenter(DetailView view) {
         this.view = view;
-        this.interactor = new SerieDetailInteractor(this);
+        this.interactor = new SerieDetailNewApiInteractor(this);
         this.favoriteSeriesInteractor = new FavoriteSeriesInteractor(view);
     }
 
@@ -39,11 +43,32 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
         view.setFavoritable(!isSerieInserted);
 
         view.showProgress();
-        interactor.loadSerieInfo(serie);
+        interactor.loadSerieDetails(serie);
 
     }
 
     @Override
+    public void onDataDownloaded(SerieDetail data) {
+        view.hideProgress();
+
+
+        String timeUntilNextEpisode = getTimeUntilNextEpisode(data.getAirDate());
+        String airDateFormatted = formatAirDate(data.getAirDate());
+        String nextEpisode = formatNextEpisode(data);
+        String nextEpisodeOrder = getNextEpisodeOrder(data);
+
+
+        view.showTimeRemaining(timeUntilNextEpisode);
+        view.showNextEpisodeDate(airDateFormatted);
+        view.showNextEpisodeInfo(nextEpisode, nextEpisodeOrder);
+        view.showSerieStart(data.getStartDate());
+        view.showSerieEnd(data.getEndDate());
+        view.showSerieGenres(data.getGenres());
+
+
+    }
+
+    /*//@Override
     public void onSerieInfoDownloaded(SerieInfo info){
         view.hideProgress();
 
@@ -51,19 +76,67 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
         view.showTimeRemaining(timeUntilNextEpisode);
         view.showNextEpisodeDate(info.getDateNextEpisode());
-        view.showNextEpisodeNumber(info.getNextEpisode());
+        //view.showNextEpisodeNumber(info.getNextEpisode());
         view.showSerieStart(info.getStart());
         view.showSerieEnd(info.getEnd());
         view.showSerieGenres(info.getGenres());
+    }*/
+
+    private String getNextEpisodeOrder(SerieDetail data){
+        int season = data.getSeason();
+
+        if(season == 0){
+            return "Next episode";
+        }
+
+        return "Next episode  (S" + zeroPad(season) + " E" + zeroPad(data.getEpisode())+")";
+    }
+
+    private String formatNextEpisode(SerieDetail detail){
+
+        String episodeName = detail.getEpisodeName();
+
+        if(episodeName.equals("Unknown")){
+
+            int season = detail.getSeason();
+
+            if(season == 0){
+                return episodeName;
+            }
+
+            return "Season " + season + " Episode " + detail.getEpisode();
+        }
+
+        return episodeName;
+
+    }
+
+    private String formatAirDate(String airDate){
+        if(airDate.equals("Unknown")){
+            return airDate;
+        }
+
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(airDate).toDateTime();
+
+        String month = emissionTime.monthOfYear().getAsShortText(Locale.US);
+
+        int day = emissionTime.getDayOfMonth();
+
+        int year = emissionTime.getYear();
+
+        String date = day + "/" + month + "/" + year;
+        return date;
+
     }
 
     private String getTimeUntilNextEpisode(String dateNextEpisode){
 
-        if(dateNextEpisode == null){
+        if(dateNextEpisode.equals("Unknown")){
             return "Unavailable";
         }
 
-        String pattern = "MMMMM dd, yyyy HH:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm:ss";
 
         DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(dateNextEpisode).toDateTime();
         DateTime currentTime = DateTime.now();
@@ -89,7 +162,10 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
             view.setFavoritable(false);
         }
 
+    }
 
+    private String zeroPad(int number){
+        return number < 10 ? "0"+number : ""+number;
     }
 
     @Override

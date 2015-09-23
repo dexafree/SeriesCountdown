@@ -2,6 +2,7 @@ package com.dexafree.seriescountdown.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -32,6 +33,7 @@ import com.dexafree.seriescountdown.model.SerieInfo;
 import com.dexafree.seriescountdown.presenters.DetailPresenter;
 import com.dexafree.seriescountdown.ui.views.MaterialRow;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -145,9 +147,10 @@ public class DetailActivity extends BaseActivity implements DetailView {
     }
 
     @Override
-    public void showNextEpisodeNumber(String text) {
-        nameRow.setRowContent(text);
-        nameRow.setHintText("Next episode");
+    public void showNextEpisodeInfo(String title, String subtitle) {
+
+        nameRow.setRowContent(title);
+        nameRow.setHintText(subtitle);
     }
 
     @Override
@@ -191,7 +194,6 @@ public class DetailActivity extends BaseActivity implements DetailView {
                 .load(mSerie.getImageHDUrl())
                 .noFade()
                 .noPlaceholder()
-                .fit().centerCrop()
                 .into(serieImage);
     }
 
@@ -199,7 +201,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
         Picasso.with(this)
                 .load(mSerie.getImageUrl())
                 .noFade()
-                .fit().centerCrop()
+                .noPlaceholder()
                 .into(serieImage);
     }
 
