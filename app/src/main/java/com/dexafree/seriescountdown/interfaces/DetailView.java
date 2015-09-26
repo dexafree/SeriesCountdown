@@ -19,6 +19,7 @@ public interface DetailView extends IBaseView {
     void showSerieStart(String text);
     void showSerieEnd(String text);
     void showSerieGenres(String text);
+    void showSerieDescription(String text);
 
     void showError();
 

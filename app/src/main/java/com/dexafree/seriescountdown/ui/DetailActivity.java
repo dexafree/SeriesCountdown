@@ -53,6 +53,9 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Bind(R.id.time_remaining_textview)
     TextView timeRemainingTextView;
 
+    @Bind(R.id.serie_description)
+    TextView serieDescriptionTextView;
+
     @Bind(R.id.next_episode_date_row)
     MaterialRow dateRow;
 
@@ -169,6 +172,11 @@ public class DetailActivity extends BaseActivity implements DetailView {
     public void showSerieGenres(String text) {
         serieGenresRow.setRowContent(text);
         serieGenresRow.setHintText("Genres");
+    }
+
+    @Override
+    public void showSerieDescription(String text) {
+        serieDescriptionTextView.setText(text);
     }
 
     @Override

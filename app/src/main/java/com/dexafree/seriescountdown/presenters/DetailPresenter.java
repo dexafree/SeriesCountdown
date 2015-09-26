@@ -65,6 +65,7 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         view.showSerieStart(startDate);
         view.showSerieEnd(endDate);
         view.showSerieGenres(data.getGenres());
+        view.showSerieDescription(data.getDescription().replace("<br>", "\n").trim());
 
 
     }
