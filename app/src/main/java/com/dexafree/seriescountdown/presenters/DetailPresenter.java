@@ -56,13 +56,14 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         String airDateFormatted = formatAirDate(data.getAirDate());
         String nextEpisode = formatNextEpisode(data);
         String nextEpisodeOrder = getNextEpisodeOrder(data);
-
+        String startDate = formatStartEndDate(data.getStartDate());
+        String endDate = formatStartEndDate(data.getEndDate());
 
         view.showTimeRemaining(timeUntilNextEpisode);
         view.showNextEpisodeDate(airDateFormatted);
         view.showNextEpisodeInfo(nextEpisode, nextEpisodeOrder);
-        view.showSerieStart(data.getStartDate());
-        view.showSerieEnd(data.getEndDate());
+        view.showSerieStart(startDate);
+        view.showSerieEnd(endDate);
         view.showSerieGenres(data.getGenres());
 
 
@@ -82,7 +83,23 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         view.showSerieGenres(info.getGenres());
     }*/
 
-    private String getNextEpisodeOrder(SerieDetail data){
+    private String formatStartEndDate(String date){
+        if(date.equals("Unknown")){
+            return date;
+        }
+
+        String pattern = "MMM/dd/yyyy";
+        DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+
+        int day = emissionTime.getDayOfMonth();
+        int month = emissionTime.getMonthOfYear();
+        int year = emissionTime.getYear();
+
+        return day + "/" + month + "/" + year;
+
+    }
+
+    private String getNextEpisodeOrder(SerieDetail data) {
         int season = data.getSeason();
 
         if(season == 0){
@@ -105,6 +122,8 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
             }
 
             return "Season " + season + " Episode " + detail.getEpisode();
+        } else if (episodeName.equals("TBA")){
+            return "To Be Announced";
         }
 
         return episodeName;
@@ -119,7 +138,8 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         String pattern = "yyyy-MM-dd HH:mm:ss";
         DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(airDate).toDateTime();
 
-        String month = emissionTime.monthOfYear().getAsShortText(Locale.US);
+        //String month = emissionTime.monthOfYear().getAsShortText(Locale.US);
+        int month = emissionTime.getMonthOfYear();
 
         int day = emissionTime.getDayOfMonth();
 
