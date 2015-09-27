@@ -24,6 +24,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dexafree.seriescountdown.R;
@@ -77,6 +78,9 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Bind(R.id.favorite_fab)
     FloatingActionButton favoriteFAB;
 
+    @Bind(R.id.progress_view)
+    ProgressBar progressView;
+
     @OnClick(R.id.favorite_fab)
     void onFabClicked(){
         presenter.onSaveSerieClicked();
@@ -124,17 +128,20 @@ public class DetailActivity extends BaseActivity implements DetailView {
         }
         setExitTransition();
 
+        progressView.setIndeterminate(true);
+
 
     }
 
     @Override
     public void showProgress() {
-
+        progressView.setVisibility(View.VISIBLE);
+        progressView.setProgress(1);
     }
 
     @Override
     public void hideProgress() {
-
+        progressView.setVisibility(View.GONE);
     }
 
     @Override

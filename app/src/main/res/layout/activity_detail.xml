@@ -59,175 +59,189 @@
         android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:id="@+id/detail_content"
-            android:padding="@dimen/small_padding"
-            android:visibility="invisible"
-            android:orientation="vertical"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.CardView
-                android:padding="@dimen/big_padding"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="2dp"
-                app:cardCornerRadius="2dp"
-                app:cardUseCompatPadding="true">
-
-                <LinearLayout
-                    android:paddingLeft="@dimen/big_padding"
-                    android:paddingRight="@dimen/big_padding"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/time_remaining_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/big_padding"
-                        android:paddingBottom="@dimen/big_padding"
-                        android:gravity="center"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                        android:fontFamily="sans-serif-condensed"
-                        android:textSize="24sp"/>
-
-                    <com.dexafree.seriescountdown.ui.views.MaterialRow
-                        android:id="@+id/next_episode_date_row"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <View
-                        android:id="@+id/first_divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider_grey"
-                        android:layout_marginLeft="56dp"
-                        android:layout_marginRight="@dimen/small_padding"/>
-
-                    <com.dexafree.seriescountdown.ui.views.MaterialRow
-                        android:id="@+id/next_episode_name_row"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/big_padding"/>
-
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="2dp"
-            app:cardCornerRadius="2dp"
-            app:cardUseCompatPadding="true">
-
             <LinearLayout
+                android:id="@+id/detail_content"
+                android:padding="@dimen/small_padding"
+                android:visibility="invisible"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:textColor="@color/accent"
-                    android:textSize="18sp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/big_padding"
-                    android:paddingRight="@dimen/big_padding"
-                    android:text="Description"/>
-                <View
-                    android:background="@color/divider_grey"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="-16dp"
-                    android:layout_marginRight="-16dp"/>
-
-                <TextView
-                    android:id="@+id/serie_description"
+                <android.support.v7.widget.CardView
+                    android:padding="@dimen/big_padding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/big_padding"/>
+                    android:elevation="2dp"
+                    app:cardCornerRadius="2dp"
+                    app:cardUseCompatPadding="true">
 
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="2dp"
-                app:cardCornerRadius="2dp"
-                app:cardUseCompatPadding="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:textColor="@color/accent"
-                        android:textSize="18sp"
-                        android:gravity="center_vertical"
+                    <LinearLayout
                         android:paddingLeft="@dimen/big_padding"
                         android:paddingRight="@dimen/big_padding"
-                        android:text="Information"/>
-                    <View
-                        android:background="@color/divider_grey"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="-16dp"
-                        android:layout_marginRight="-16dp"/>
-
-                    <com.dexafree.seriescountdown.ui.views.MaterialRow
-                        android:id="@+id/serie_start_row"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/big_padding"
-                        android:paddingLeft="@dimen/big_padding"
-                        android:paddingRight="@dimen/big_padding"/>
+                        android:orientation="vertical">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider_grey"
-                        android:layout_marginLeft="56dp"
-                        android:layout_marginRight="@dimen/small_padding"/>
+                        <TextView
+                            android:id="@+id/time_remaining_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/big_padding"
+                            android:paddingBottom="@dimen/big_padding"
+                            android:gravity="center"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                            android:fontFamily="sans-serif-condensed"
+                            android:textSize="24sp"/>
 
-                    <com.dexafree.seriescountdown.ui.views.MaterialRow
-                        android:id="@+id/serie_end_row"
+                        <com.dexafree.seriescountdown.ui.views.MaterialRow
+                            android:id="@+id/next_episode_date_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                        <View
+                            android:id="@+id/first_divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider_grey"
+                            android:layout_marginLeft="56dp"
+                            android:layout_marginRight="@dimen/small_padding"/>
+
+                        <com.dexafree.seriescountdown.ui.views.MaterialRow
+                            android:id="@+id/next_episode_name_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/big_padding"/>
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="2dp"
+                    app:cardCornerRadius="2dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/big_padding"
-                        android:paddingLeft="@dimen/big_padding"
-                        android:paddingRight="@dimen/big_padding"/>
+                        android:orientation="vertical">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider_grey"
-                        android:layout_marginLeft="56dp"
-                        android:layout_marginRight="@dimen/small_padding"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:textColor="@color/accent"
+                            android:textSize="18sp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/big_padding"
+                            android:paddingRight="@dimen/big_padding"
+                            android:text="Description"/>
+                        <View
+                            android:background="@color/divider_grey"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="-16dp"
+                            android:layout_marginRight="-16dp"/>
 
-                    <com.dexafree.seriescountdown.ui.views.MaterialRow
-                        android:id="@+id/serie_genres_row"
+                        <TextView
+                            android:id="@+id/serie_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/big_padding"/>
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="2dp"
+                    app:cardCornerRadius="2dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/big_padding"
-                        android:paddingLeft="@dimen/big_padding"
-                        android:paddingRight="@dimen/big_padding"/>
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:textColor="@color/accent"
+                            android:textSize="18sp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/big_padding"
+                            android:paddingRight="@dimen/big_padding"
+                            android:text="Information"/>
+                        <View
+                            android:background="@color/divider_grey"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="-16dp"
+                            android:layout_marginRight="-16dp"/>
+
+                        <com.dexafree.seriescountdown.ui.views.MaterialRow
+                            android:id="@+id/serie_start_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/big_padding"
+                            android:paddingLeft="@dimen/big_padding"
+                            android:paddingRight="@dimen/big_padding"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider_grey"
+                            android:layout_marginLeft="56dp"
+                            android:layout_marginRight="@dimen/small_padding"/>
+
+                        <com.dexafree.seriescountdown.ui.views.MaterialRow
+                            android:id="@+id/serie_end_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/big_padding"
+                            android:paddingLeft="@dimen/big_padding"
+                            android:paddingRight="@dimen/big_padding"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider_grey"
+                            android:layout_marginLeft="56dp"
+                            android:layout_marginRight="@dimen/small_padding"/>
+
+                        <com.dexafree.seriescountdown.ui.views.MaterialRow
+                            android:id="@+id/serie_genres_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/big_padding"
+                            android:paddingLeft="@dimen/big_padding"
+                            android:paddingRight="@dimen/big_padding"/>
 
 
 
-                </LinearLayout>
+                    </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+                </android.support.v7.widget.CardView>
 
-        </LinearLayout>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_view"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"/>
+
+        </FrameLayout>
+
 
     </ScrollView>
 

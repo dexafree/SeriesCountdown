@@ -17,8 +17,11 @@ public class FavoriteSeriesFragment extends BaseSerieListFragment<FavoriteSeries
     public void reloadSeries(){
         if(presenter != null) {
             presenter.reloadSeries();
+            Log.d("FAVORITESERIESFRAGMENT", "PRESENTER IS NOT NULL");
         } else {
             Log.d("FAVORITESERIESFRAGMENT", "PRESENTER IS NULL");
+            /*presenter = getPresenter();
+            presenter.reloadSeries();*/
         }
     }
 

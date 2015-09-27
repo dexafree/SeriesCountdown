@@ -1,22 +1,18 @@
 package com.dexafree.seriescountdown.presenters;
 
-import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
-import com.dexafree.seriescountdown.interactors.SerieDetailInteractor;
 import com.dexafree.seriescountdown.interactors.SerieDetailNewApiInteractor;
 import com.dexafree.seriescountdown.interfaces.DetailView;
-import com.dexafree.seriescountdown.model.CountDown;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.model.SerieDetail;
-import com.dexafree.seriescountdown.model.SerieInfo;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
 
@@ -51,9 +47,9 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
     public void onDataDownloaded(SerieDetail data) {
         view.hideProgress();
 
-
         String timeUntilNextEpisode = getTimeUntilNextEpisode(data.getAirDate());
         String airDateFormatted = formatAirDate(data.getAirDate());
+        String description = formatDescription(data.getDescription());
         String nextEpisode = formatNextEpisode(data);
         String nextEpisodeOrder = getNextEpisodeOrder(data);
         String startDate = formatStartEndDate(data.getStartDate());
@@ -65,7 +61,7 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         view.showSerieStart(startDate);
         view.showSerieEnd(endDate);
         view.showSerieGenres(data.getGenres());
-        view.showSerieDescription(data.getDescription().replace("<br>", "\n").trim());
+        view.showSerieDescription(description);
 
 
     }
@@ -83,6 +79,17 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         view.showSerieEnd(info.getEnd());
         view.showSerieGenres(info.getGenres());
     }*/
+
+    private String formatDescription(String description){
+
+        String trimmed = description.replace("\n", "").replace("<br>", "").trim();
+
+        if(TextUtils.isEmpty(trimmed)){
+            return "No description available";
+        }
+
+        return description.replace("<br>", "\n").trim();
+    }
 
     private String formatStartEndDate(String date){
         if(date.equals("Unknown")){
