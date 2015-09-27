@@ -11,6 +11,9 @@ public interface DetailView extends IBaseView {
     void showProgress();
     void hideProgress();
 
+    void makeContentVisible();
+    void loadFullSizeImage();
+
     void setFavoritable(boolean favoritable);
 
     void showTimeRemaining(String text);

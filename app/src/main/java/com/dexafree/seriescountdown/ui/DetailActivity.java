@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -31,6 +32,7 @@ import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.interfaces.DetailView;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.model.SerieInfo;
+import com.dexafree.seriescountdown.persistence.PersistableObject;
 import com.dexafree.seriescountdown.presenters.DetailPresenter;
 import com.dexafree.seriescountdown.ui.views.MaterialRow;
 import com.squareup.picasso.Picasso;
@@ -47,6 +49,8 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
     public static final String EXTRA_IMAGE = "DetailActivity:serie_image";
     public final static String SERIE_EXTRA = "serie";
+
+    private final static String PRESENTER_PERSISTANCE = "presenter_persistance";
 
     @Bind(R.id.serie_image)
     ImageView serieImage;
@@ -108,7 +112,14 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        presenter.init();
+
+        if(savedInstanceState != null && savedInstanceState.containsKey(PRESENTER_PERSISTANCE)){
+            PersistableObject persistance = savedInstanceState.getParcelable(PRESENTER_PERSISTANCE);
+            presenter.init(persistance);
+        } else {
+            presenter.init();
+        }
+
     }
 
     private void init(){
@@ -129,7 +140,6 @@ public class DetailActivity extends BaseActivity implements DetailView {
         setExitTransition();
 
         progressView.setIndeterminate(true);
-
 
     }
 
@@ -204,7 +214,13 @@ public class DetailActivity extends BaseActivity implements DetailView {
         favoriteFAB.setImageResource(drawable);
     }
 
-    private void loadFullSizeImage(){
+    @Override
+    public void makeContentVisible() {
+        fadeInContent();
+    }
+
+    @Override
+    public void loadFullSizeImage(){
         Picasso.with(this)
                 .load(mSerie.getImageHDUrl())
                 .noFade()
@@ -381,6 +397,13 @@ public class DetailActivity extends BaseActivity implements DetailView {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Parcelable presenterState = presenter.getPersistance();
+        outState.putParcelable(PRESENTER_PERSISTANCE, presenterState);
     }
 
     public static void launch(Activity activity, View transitionView, Serie serie) {

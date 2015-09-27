@@ -8,6 +8,8 @@ import com.dexafree.seriescountdown.interactors.SerieDetailNewApiInteractor;
 import com.dexafree.seriescountdown.interfaces.DetailView;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.model.SerieDetail;
+import com.dexafree.seriescountdown.persistence.DetailPersistance;
+import com.dexafree.seriescountdown.persistence.PersistableObject;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -21,9 +23,13 @@ import java.util.Locale;
  */
 public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
 
+    private final static String TAG = DetailPresenter.class.getName();
+
     private DetailView view;
     private SerieDetailNewApiInteractor interactor;
     private FavoriteSeriesInteractor favoriteSeriesInteractor;
+
+    private SerieDetail showingDetail;
 
     public DetailPresenter(DetailView view) {
         this.view = view;
@@ -34,17 +40,50 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
     public void init(){
         Serie serie = view.getSerie();
 
-        boolean isSerieInserted = favoriteSeriesInteractor.isSerieInserted(serie);
-
-        view.setFavoritable(!isSerieInserted);
-
         view.showProgress();
+        checkSerieInserted(serie);
         interactor.loadSerieDetails(serie);
 
     }
 
+    public void init(PersistableObject persistance){
+
+        view.loadFullSizeImage();
+        Serie serie = view.getSerie();
+
+        if(persistance != null) {
+            DetailPersistance realPersistance = (DetailPersistance) persistance;
+            this.showingDetail = realPersistance.getDetail();
+        }
+
+        if(showingDetail != null) {
+
+            Log.d(TAG, "Init with persistance.");
+            Log.d(TAG, "Persistance: " + showingDetail.toString());
+
+            showSerieDetail(showingDetail);
+            checkSerieInserted(serie);
+            view.makeContentVisible();
+        } else {
+            init();
+        }
+    }
+
+    private void checkSerieInserted(Serie serie){
+        boolean isSerieInserted = favoriteSeriesInteractor.isSerieInserted(serie);
+
+        view.setFavoritable(!isSerieInserted);
+    }
+
     @Override
     public void onDataDownloaded(SerieDetail data) {
+
+        this.showingDetail = data;
+        showSerieDetail(data);
+
+    }
+
+    private void showSerieDetail(SerieDetail data){
         view.hideProgress();
 
         String timeUntilNextEpisode = getTimeUntilNextEpisode(data.getAirDate());
@@ -62,23 +101,8 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         view.showSerieEnd(endDate);
         view.showSerieGenres(data.getGenres());
         view.showSerieDescription(description);
-
-
     }
 
-    /*//@Override
-    public void onSerieInfoDownloaded(SerieInfo info){
-        view.hideProgress();
-
-        String timeUntilNextEpisode = getTimeUntilNextEpisode(info.getRemaining());
-
-        view.showTimeRemaining(timeUntilNextEpisode);
-        view.showNextEpisodeDate(info.getDateNextEpisode());
-        //view.showNextEpisodeNumber(info.getNextEpisode());
-        view.showSerieStart(info.getStart());
-        view.showSerieEnd(info.getEnd());
-        view.showSerieGenres(info.getGenres());
-    }*/
 
     private String formatDescription(String description){
 
@@ -96,8 +120,17 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
             return date;
         }
 
-        String pattern = "MMM/dd/yyyy";
-        DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+        DateTime emissionTime;
+
+        // TRY-CATCH required for different formats provided (ie: The Flash and Game Of Thrones)
+        try {
+            String pattern = "MMM/dd/yyyy";
+            emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+        } catch (IllegalArgumentException exception){
+
+            String pattern = "yyyy-MM-dd";
+            emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+        }
 
         int day = emissionTime.getDayOfMonth();
         int month = emissionTime.getMonthOfYear();
@@ -200,5 +233,9 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
     public void onError() {
         view.hideProgress();
         view.showError();
+    }
+
+    public DetailPersistance getPersistance(){
+        return new DetailPersistance(showingDetail);
     }
 }

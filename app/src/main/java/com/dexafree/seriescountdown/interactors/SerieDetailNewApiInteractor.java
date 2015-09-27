@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import fj.data.IterableW;
@@ -67,27 +68,36 @@ public class SerieDetailNewApiInteractor extends BaseInteractor<SerieDetail> {
         JsonObject root = gson.fromJson(content, JsonObject.class).get("tvShow").getAsJsonObject();
 
         int id = root.get("id").getAsInt();
-        String name = root.get("name").getAsString();
-        String codeName = root.get("permalink").getAsString();
-        String description = root.get("description").getAsString();
-        String startDate = root.get("start_date").getAsString();
-        String endDate = root.get("end_date").getAsString();
-        String imageThumbnailPath = root.get("image_thumbnail_path").getAsString();
-        String imagePath = root.get("image_path").getAsString();
-        String rating = root.get("rating").getAsString();
-        List<String> genres = extractGenres(root);
+        String name = extractAttribute(root, "name");
+        String codeName = extractAttribute(root, "permalink");
+        String description = extractAttribute(root, "description");
+        String startDate = extractAttribute(root, "start_date");
+        String endDate = extractAttribute(root, "end_date");
+        String imageThumbnailPath = extractAttribute(root, "image_thumbnail_path");
+        String imagePath = extractAttribute(root, "image_path");
+        String rating = extractAttribute(root, "rating");
+        ArrayList<String> genres = extractGenres(root);
         CountDown countDown = extractCountdown(root);
 
         return new SerieDetail(id, name, codeName, description, startDate, endDate,
                                imageThumbnailPath, imagePath, rating, genres, countDown);
     }
 
-    private List<String> extractGenres(JsonObject root){
+    private String extractAttribute(JsonObject root, String attribute){
+        JsonElement element = root.get(attribute);
+        if(!element.isJsonNull()){
+            return element.getAsString();
+        } else {
+            return "Unknown";
+        }
+    }
+
+    private ArrayList<String> extractGenres(JsonObject root){
         JsonArray genresArray = root.get("genres").getAsJsonArray();
 
         IterableW<JsonElement> elements = IterableW.wrap(genresArray);
 
-        List<String> genres = elements.map(JsonElement::getAsString).toStandardList();
+        ArrayList<String> genres = new ArrayList<>(elements.map(JsonElement::getAsString).toStandardList());
         return genres;
     }
 
