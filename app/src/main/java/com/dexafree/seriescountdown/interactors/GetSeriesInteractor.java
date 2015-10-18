@@ -3,6 +3,7 @@ package com.dexafree.seriescountdown.interactors;
 import android.util.Log;
 
 import com.dexafree.seriescountdown.model.Serie;
+import com.dexafree.seriescountdown.utils.ContentUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,9 +31,7 @@ import rx.schedulers.Schedulers;
  */
 public class GetSeriesInteractor extends BaseSeriesInteractor {
 
-
-    private final static String POPULAR_SERIES_ENDPOINT = "http://www.episodate.com/most-popular?page=";
-    private final static String SEARCH_SERIES_ENDPOINT = "http://www.episodate.com/search?q=%s&page=";
+    private final static String SEARCH_SERIES_ENDPOINT = "https://www.episodate.com/search?q=%s&page=";
 
 
     private final static String BLOCK_SELECTOR = "div.mix-border > a";
@@ -43,17 +42,6 @@ public class GetSeriesInteractor extends BaseSeriesInteractor {
     private final static String REDIRECTED_TITLE_SELECTOR = ".breadcrumbs > .container > .pull-left";
     private final static String REDIRECTED_IMAGE_SELECTOR = "img.img-responsive";
 
-
-    public Subscription loadSeries(Observer<Serie> subscriber, int page) {
-
-        String url = POPULAR_SERIES_ENDPOINT + page;
-
-        return getObservable(url)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(subscriber);
-
-    }
 
     public Subscription searchSeries(Observer<Serie> subscriber, String query, int page){
 
@@ -90,14 +78,8 @@ public class GetSeriesInteractor extends BaseSeriesInteractor {
 
             String connectedUrl = conn.getURL().toString();
 
-            String response = "";
+            String response = ContentUtils.readContentFromStream(in);
 
-            BufferedReader buffer = new BufferedReader(
-                    new InputStreamReader(in));
-            String s;
-            while ((s = buffer.readLine()) != null) {
-                response += s;
-            }
 
             SearchResponse searchResponse = new SearchResponse(response, connectedUrl);
             return Observable.just(searchResponse);

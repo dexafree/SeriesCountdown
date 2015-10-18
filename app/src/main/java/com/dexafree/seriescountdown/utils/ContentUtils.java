@@ -1,9 +1,12 @@
 package com.dexafree.seriescountdown.utils;
 
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Pattern;
 
 
 /**
@@ -22,6 +25,13 @@ public class ContentUtils {
         }
         stream.close();
         return buf.toString();
+    }
+
+    public static String cleanHTMLtags(String input){
+        String linebreak = "<br ?/?>";
+        String tag = "</?[a-zA-Z]+ ?>";
+
+        return input.replaceAll(linebreak, "\n").replaceAll(tag, "");
     }
 
 }

@@ -28,7 +28,7 @@ import rx.schedulers.Schedulers;
  */
 public class SearchSuggestionsInteractor {
 
-    private final static String SUGGESTIONS_API_ENDPOINT = "http://www.episodate.com/api/search-suggestions?query=";
+    private final static String SUGGESTIONS_API_ENDPOINT = "https://www.episodate.com/api/search-suggestions?query=";
 
     public Subscription loadSuggestions(Observer<List<String>> observer, String query){
 

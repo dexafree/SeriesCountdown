@@ -28,7 +28,7 @@ import fj.data.IterableW;
  */
 public class SerieDetailNewApiInteractor extends BaseInteractor<SerieDetail> {
 
-    private final static String API_ENDPOINT = "http://www.episodate.com/api/show-details?query=";
+    private final static String API_ENDPOINT = "https://www.episodate.com/api/show-details?query=";
 
     public interface Callback extends BaseInteractor.Callback<SerieDetail>{}
 
@@ -63,18 +63,20 @@ public class SerieDetailNewApiInteractor extends BaseInteractor<SerieDetail> {
     }
 
     private SerieDetail parseContent(String content){
+
         Gson gson = new GsonBuilder().create();
 
-        JsonObject root = gson.fromJson(content, JsonObject.class).get("tvShow").getAsJsonObject();
+        JsonObject response = gson.fromJson(content, JsonObject.class);
+        JsonObject root = response.get("tvShow").getAsJsonObject();
 
         int id = root.get("id").getAsInt();
         String name = extractAttribute(root, "name");
         String codeName = extractAttribute(root, "permalink");
-        String description = extractAttribute(root, "description");
+        String description = ContentUtils.cleanHTMLtags(extractAttribute(root, "description"));
         String startDate = extractAttribute(root, "start_date");
         String endDate = extractAttribute(root, "end_date");
-        String imageThumbnailPath = extractAttribute(root, "image_thumbnail_path");
-        String imagePath = extractAttribute(root, "image_path");
+        String imageThumbnailPath = extractAttribute(root, "image_thumbnail_path").replace("http:", "https:");
+        String imagePath = extractAttribute(root, "image_path").replace("http:", "https:");
         String rating = extractAttribute(root, "rating");
         ArrayList<String> genres = extractGenres(root);
         CountDown countDown = extractCountdown(root);
