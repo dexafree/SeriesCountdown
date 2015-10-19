@@ -34,7 +34,9 @@ public class SearchSeriesInteractor extends BaseSeriesInteractor {
     public Subscription searchSeries(Observer<Serie> subscriber, String query, int page){
 
 
-        if(maxPages == -1 || (query.equalsIgnoreCase(lastQuery) && page < maxPages)) {
+        if(!query.equalsIgnoreCase(lastQuery)
+                || maxPages == -1
+                || (query.equalsIgnoreCase(lastQuery) && page < maxPages)) {
 
             this.lastQuery = query;
 
