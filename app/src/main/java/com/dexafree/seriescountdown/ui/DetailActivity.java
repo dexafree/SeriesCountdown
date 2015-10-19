@@ -11,6 +11,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dexafree.seriescountdown.R;
@@ -47,6 +50,9 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
     @Bind(R.id.serie_image)
     ImageView serieImage;
+
+    @Bind(R.id.detail_scrollview)
+    NestedScrollView scrollView;
 
     @Bind(R.id.time_remaining_textview)
     TextView timeRemainingTextView;
@@ -136,6 +142,9 @@ public class DetailActivity extends BaseActivity implements DetailView {
         } else {
             loadFullSizeImage();
             fadeInContent();
+
+            ((Toolbar)findViewById(R.id.toolbar)).setCollapsible(true);
+
         }
 
         progressView.setIndeterminate(true);
