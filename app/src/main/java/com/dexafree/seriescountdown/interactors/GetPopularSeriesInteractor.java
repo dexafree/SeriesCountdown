@@ -69,12 +69,11 @@ public class GetPopularSeriesInteractor extends BaseSeriesInteractor {
 
             // read from the urlconnection via the bufferedreader
             while ((line = bufferedReader.readLine()) != null) {
-                content.append(line + "\n");
+                content.append(line).append("\n");
             }
             bufferedReader.close();
 
-            String response = content.toString();
-            return response;
+            return content.toString();
 
         } catch (IOException e){
             e.printStackTrace();

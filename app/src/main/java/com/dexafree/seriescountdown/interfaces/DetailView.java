@@ -1,7 +1,6 @@
 package com.dexafree.seriescountdown.interfaces;
 
 import com.dexafree.seriescountdown.model.Serie;
-import com.dexafree.seriescountdown.model.SerieInfo;
 
 public interface DetailView extends IBaseView {
 

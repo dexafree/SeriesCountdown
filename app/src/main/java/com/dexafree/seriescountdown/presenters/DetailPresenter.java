@@ -187,8 +187,7 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
         int year = emissionTime.getYear();
 
-        String date = day + "/" + month + "/" + year;
-        return date;
+        return day + "/" + month + "/" + year;
 
     }
 

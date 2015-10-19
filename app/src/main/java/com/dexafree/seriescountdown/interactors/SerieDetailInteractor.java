@@ -92,8 +92,7 @@ public class SerieDetailInteractor extends BaseInteractor<SerieDetail> {
 
         IterableW<JsonElement> elements = IterableW.wrap(genresArray);
 
-        ArrayList<String> genres = new ArrayList<>(elements.map(JsonElement::getAsString).toStandardList());
-        return genres;
+        return new ArrayList<>(elements.map(JsonElement::getAsString).toStandardList());
     }
 
     private CountDown extractCountdown(JsonObject root){

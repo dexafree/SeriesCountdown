@@ -70,9 +70,7 @@ public class SearchSeriesInteractor extends BaseSeriesInteractor {
 
             InputStream in = new BufferedInputStream(conn.getInputStream());
 
-            String response = ContentUtils.readContentFromStream(in);
-
-            return response;
+            return ContentUtils.readContentFromStream(in);
         } catch (IOException e){
             e.printStackTrace();
         }
