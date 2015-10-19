@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.dexafree.seriescountdown.model.Serie;
 
-/**
- * Created by Carlos on 2/9/15.
- */
 public class FavoriteSeriesTable {
 
     @NonNull

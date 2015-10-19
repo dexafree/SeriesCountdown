@@ -18,9 +18,6 @@ import com.squareup.picasso.Picasso;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Carlos on 5/9/15.
- */
 public class ShowImageActivity extends BaseActivity {
 
     private final static String SERIE_EXTRA = "serie_extra";

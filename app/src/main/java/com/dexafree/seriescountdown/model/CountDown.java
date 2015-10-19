@@ -3,9 +3,6 @@ package com.dexafree.seriescountdown.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Carlos on 22/9/15.
- */
 public class CountDown implements Parcelable {
 
     private int season;

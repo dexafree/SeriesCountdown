@@ -2,7 +2,6 @@ package com.dexafree.seriescountdown.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,12 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.transition.Transition;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -31,20 +26,15 @@ import android.widget.TextView;
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.interfaces.DetailView;
 import com.dexafree.seriescountdown.model.Serie;
-import com.dexafree.seriescountdown.model.SerieInfo;
 import com.dexafree.seriescountdown.persistence.PersistableObject;
 import com.dexafree.seriescountdown.presenters.DetailPresenter;
 import com.dexafree.seriescountdown.ui.views.MaterialRow;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Carlos on 1/9/15.
- */
 public class DetailActivity extends BaseActivity implements DetailView {
 
     public static final String EXTRA_IMAGE = "DetailActivity:serie_image";

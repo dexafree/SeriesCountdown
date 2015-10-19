@@ -1,17 +1,11 @@
 package com.dexafree.seriescountdown.utils;
 
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Pattern;
 
 
-/**
- * Created by Carlos on 22/9/15.
- */
 public class ContentUtils {
 
     public static String readContentFromStream(InputStream stream) throws IOException {

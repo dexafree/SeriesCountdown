@@ -23,11 +23,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
-/**
- * Created by Carlos on 3/9/15.
- */
 public abstract class BaseSerieListFragment<T extends BaseSerieListPresenter> extends BaseFragment implements SeriesView {
 
     @Bind(R.id.series_recyclerview)

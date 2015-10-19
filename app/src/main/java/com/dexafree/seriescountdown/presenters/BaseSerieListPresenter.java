@@ -6,9 +6,6 @@ import com.dexafree.seriescountdown.model.Serie;
 
 import rx.Observer;
 
-/**
- * Created by Carlos on 3/9/15.
- */
 public abstract class BaseSerieListPresenter<T extends BaseSeriesInteractor> implements Observer<Serie> {
 
     protected SeriesView view;

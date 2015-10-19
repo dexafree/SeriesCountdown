@@ -2,9 +2,6 @@ package com.dexafree.seriescountdown.interactors;
 
 import com.arasthel.asyncjob.AsyncJob;
 
-/**
- * Created by Carlos on 22/9/15.
- */
 public abstract class BaseInteractor<T> {
 
     public interface Callback<T> {

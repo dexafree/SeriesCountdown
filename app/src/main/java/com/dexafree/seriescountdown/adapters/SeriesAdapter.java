@@ -1,8 +1,6 @@
 package com.dexafree.seriescountdown.adapters;
 
-import android.animation.ObjectAnimator;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by Carlos on 1/9/15.
- */
 public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder> {
 
 
@@ -39,10 +34,6 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
 
         holder.text.setText(item.getName());
         holder.image.setImageBitmap(null);
-
-
-        /*Picasso.with(holder.image.getContext())
-                .cancelRequest(holder.image);*/
 
         Picasso.with(holder.image.getContext())
                 .load(item.getImageUrl())

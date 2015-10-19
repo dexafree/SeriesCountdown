@@ -22,9 +22,6 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Carlos on 17/10/15.
- */
 public class GetPopularSeriesInteractor extends BaseSeriesInteractor {
 
     private final static String POPULAR_SERIES_ENDPOINT = "https://www.episodate.com/api/most-popular?page=";

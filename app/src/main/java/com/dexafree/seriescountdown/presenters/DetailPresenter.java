@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
-import com.dexafree.seriescountdown.interactors.SerieDetailNewApiInteractor;
+import com.dexafree.seriescountdown.interactors.SerieDetailInteractor;
 import com.dexafree.seriescountdown.interfaces.DetailView;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.model.SerieDetail;
@@ -18,22 +18,19 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.Locale;
 
-/**
- * Created by Carlos on 2/9/15.
- */
-public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
+public class DetailPresenter implements SerieDetailInteractor.Callback {
 
     private final static String TAG = DetailPresenter.class.getName();
 
     private DetailView view;
-    private SerieDetailNewApiInteractor interactor;
+    private SerieDetailInteractor interactor;
     private FavoriteSeriesInteractor favoriteSeriesInteractor;
 
     private SerieDetail showingDetail;
 
     public DetailPresenter(DetailView view) {
         this.view = view;
-        this.interactor = new SerieDetailNewApiInteractor(this);
+        this.interactor = new SerieDetailInteractor(this);
         this.favoriteSeriesInteractor = new FavoriteSeriesInteractor(view);
     }
 
@@ -123,13 +120,18 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         DateTime emissionTime;
 
         // TRY-CATCH required for different formats provided (ie: The Flash and Game Of Thrones)
+        // Is ugly, I know, but there are many different formats and it's impossible to check them all
         try {
             String pattern = "MMM/dd/yyyy";
             emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
         } catch (IllegalArgumentException exception){
 
-            String pattern = "yyyy-MM-dd";
-            emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+            try {
+                String pattern = "yyyy-MM-dd";
+                emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+            } catch (IllegalArgumentException e){
+                return date;
+            }
         }
 
         int day = emissionTime.getDayOfMonth();
@@ -179,7 +181,6 @@ public class DetailPresenter implements SerieDetailNewApiInteractor.Callback {
         String pattern = "yyyy-MM-dd HH:mm:ss";
         DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(airDate).toDateTime();
 
-        //String month = emissionTime.monthOfYear().getAsShortText(Locale.US);
         int month = emissionTime.getMonthOfYear();
 
         int day = emissionTime.getDayOfMonth();

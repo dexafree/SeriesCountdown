@@ -11,9 +11,6 @@ import java.util.List;
 import rx.Observer;
 import rx.Subscription;
 
-/**
- * Created by Carlos on 3/9/15.
- */
 public class FavoriteSeriesPresenter extends BaseSerieListPresenter<FavoriteSeriesInteractor> implements Observer<Serie> {
 
     private Subscription subscription;

@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import com.dexafree.seriescountdown.model.SerieDetail;
 
-/**
- * Created by Carlos on 27/9/15.
- */
 public class DetailPersistance extends PersistableObject implements Parcelable {
 
     private SerieDetail detail;

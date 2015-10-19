@@ -3,9 +3,6 @@ package com.dexafree.seriescountdown.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Carlos on 2/9/15.
- */
 public class SerieInfo implements Parcelable {
 
     private String genres;

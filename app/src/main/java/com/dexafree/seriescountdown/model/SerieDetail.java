@@ -6,9 +6,6 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Carlos on 22/9/15.
- */
 public class SerieDetail implements Parcelable {
 
     private int id;
