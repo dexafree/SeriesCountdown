@@ -1,7 +1,9 @@
 package com.dexafree.seriescountdown.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.model.Serie;
+import com.dexafree.seriescountdown.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -47,8 +50,12 @@ public class ShowImageActivity extends BaseActivity {
 
         getSupportActionBar().setTitle(mSerie.getName());
 
-        if(addTransitionListener()){
-            loadThumbnail();
+        if(Utils.isLollipopOrHigher()) {
+            if (addTransitionListener()) {
+                loadThumbnail();
+            }
+        } else {
+            loadFullSizeImage();
         }
     }
 
@@ -69,6 +76,7 @@ public class ShowImageActivity extends BaseActivity {
                 .into(serieImage);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private boolean addTransitionListener() {
         final Transition transition = getWindow().getSharedElementEnterTransition();
 

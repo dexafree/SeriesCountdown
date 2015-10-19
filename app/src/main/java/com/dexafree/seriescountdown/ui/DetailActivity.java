@@ -1,7 +1,9 @@
 package com.dexafree.seriescountdown.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -29,6 +31,7 @@ import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.persistence.PersistableObject;
 import com.dexafree.seriescountdown.presenters.DetailPresenter;
 import com.dexafree.seriescountdown.ui.views.MaterialRow;
+import com.dexafree.seriescountdown.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -124,10 +127,16 @@ public class DetailActivity extends BaseActivity implements DetailView {
         collapsingToolbarLayout.setTitle(mSerie.getName());
         collapsingToolbarLayout.setOnTouchListener((v, event) -> true);
 
-        if(addTransitionListener()){
-            loadThumbnail();
+        if(Utils.isLollipopOrHigher()) {
+
+            if (addTransitionListener()) {
+                loadThumbnail();
+            }
+            setExitTransition();
+        } else {
+            loadFullSizeImage();
+            fadeInContent();
         }
-        setExitTransition();
 
         progressView.setIndeterminate(true);
 
@@ -292,6 +301,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
         detailContent.startAnimation(animation);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setExitTransition(){
         Transition transition = getWindow().getExitTransition();
 
@@ -326,6 +336,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private boolean addTransitionListener() {
         final Transition transition = getWindow().getSharedElementEnterTransition();
 
