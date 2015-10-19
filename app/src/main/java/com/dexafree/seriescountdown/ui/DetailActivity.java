@@ -1,7 +1,9 @@
 package com.dexafree.seriescountdown.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,6 +11,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dexafree.seriescountdown.R;
@@ -29,6 +34,7 @@ import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.persistence.PersistableObject;
 import com.dexafree.seriescountdown.presenters.DetailPresenter;
 import com.dexafree.seriescountdown.ui.views.MaterialRow;
+import com.dexafree.seriescountdown.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -44,6 +50,9 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
     @Bind(R.id.serie_image)
     ImageView serieImage;
+
+    @Bind(R.id.detail_scrollview)
+    NestedScrollView scrollView;
 
     @Bind(R.id.time_remaining_textview)
     TextView timeRemainingTextView;
@@ -124,10 +133,19 @@ public class DetailActivity extends BaseActivity implements DetailView {
         collapsingToolbarLayout.setTitle(mSerie.getName());
         collapsingToolbarLayout.setOnTouchListener((v, event) -> true);
 
-        if(addTransitionListener()){
-            loadThumbnail();
+        if(Utils.isLollipopOrHigher()) {
+
+            if (addTransitionListener()) {
+                loadThumbnail();
+            }
+            setExitTransition();
+        } else {
+            loadFullSizeImage();
+            fadeInContent();
+
+            ((Toolbar)findViewById(R.id.toolbar)).setCollapsible(true);
+
         }
-        setExitTransition();
 
         progressView.setIndeterminate(true);
 
@@ -292,6 +310,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
         detailContent.startAnimation(animation);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setExitTransition(){
         Transition transition = getWindow().getExitTransition();
 
@@ -326,6 +345,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private boolean addTransitionListener() {
         final Transition transition = getWindow().getSharedElementEnterTransition();
 

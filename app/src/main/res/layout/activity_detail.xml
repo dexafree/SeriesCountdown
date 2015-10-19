@@ -53,10 +53,10 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/detail_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <FrameLayout
@@ -243,7 +243,7 @@
         </FrameLayout>
 
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/favorite_fab"
