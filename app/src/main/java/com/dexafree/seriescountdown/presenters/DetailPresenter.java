@@ -1,13 +1,15 @@
 package com.dexafree.seriescountdown.presenters;
 
-import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SerieDetailInteractor;
 import com.dexafree.seriescountdown.interfaces.DetailView;
 import com.dexafree.seriescountdown.model.Serie;
-import com.dexafree.seriescountdown.model.SerieInfo;
+import com.dexafree.seriescountdown.model.SerieDetail;
+import com.dexafree.seriescountdown.persistence.DetailPersistance;
+import com.dexafree.seriescountdown.persistence.PersistableObject;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -16,14 +18,15 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.Locale;
 
-/**
- * Created by Carlos on 2/9/15.
- */
 public class DetailPresenter implements SerieDetailInteractor.Callback {
+
+    private final static String TAG = DetailPresenter.class.getName();
 
     private DetailView view;
     private SerieDetailInteractor interactor;
     private FavoriteSeriesInteractor favoriteSeriesInteractor;
+
+    private SerieDetail showingDetail;
 
     public DetailPresenter(DetailView view) {
         this.view = view;
@@ -34,36 +37,168 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
     public void init(){
         Serie serie = view.getSerie();
 
-        boolean isSerieInserted = favoriteSeriesInteractor.isSerieInserted(serie);
-
-        view.setFavoritable(!isSerieInserted);
-
         view.showProgress();
-        interactor.loadSerieInfo(serie);
+        checkSerieInserted(serie);
+        interactor.loadSerieDetails(serie);
 
     }
 
+    public void init(PersistableObject persistance){
+
+        view.loadFullSizeImage();
+        Serie serie = view.getSerie();
+
+        if(persistance != null) {
+            DetailPersistance realPersistance = (DetailPersistance) persistance;
+            this.showingDetail = realPersistance.getDetail();
+        }
+
+        if(showingDetail != null) {
+
+            Log.d(TAG, "Init with persistance.");
+            Log.d(TAG, "Persistance: " + showingDetail.toString());
+
+            showSerieDetail(showingDetail);
+            checkSerieInserted(serie);
+            view.makeContentVisible();
+        } else {
+            init();
+        }
+    }
+
+    private void checkSerieInserted(Serie serie){
+        boolean isSerieInserted = favoriteSeriesInteractor.isSerieInserted(serie);
+
+        view.setFavoritable(!isSerieInserted);
+    }
+
     @Override
-    public void onSerieInfoDownloaded(SerieInfo info){
+    public void onDataDownloaded(SerieDetail data) {
+
+        this.showingDetail = data;
+        showSerieDetail(data);
+
+    }
+
+    private void showSerieDetail(SerieDetail data){
         view.hideProgress();
 
-        String timeUntilNextEpisode = getTimeUntilNextEpisode(info.getRemaining());
+        String timeUntilNextEpisode = getTimeUntilNextEpisode(data.getAirDate());
+        String airDateFormatted = formatAirDate(data.getAirDate());
+        String description = formatDescription(data.getDescription());
+        String nextEpisode = formatNextEpisode(data);
+        String nextEpisodeOrder = getNextEpisodeOrder(data);
+        String startDate = formatStartEndDate(data.getStartDate());
+        String endDate = formatStartEndDate(data.getEndDate());
 
         view.showTimeRemaining(timeUntilNextEpisode);
-        view.showNextEpisodeDate(info.getDateNextEpisode());
-        view.showNextEpisodeNumber(info.getNextEpisode());
-        view.showSerieStart(info.getStart());
-        view.showSerieEnd(info.getEnd());
-        view.showSerieGenres(info.getGenres());
+        view.showNextEpisodeDate(airDateFormatted);
+        view.showNextEpisodeInfo(nextEpisode, nextEpisodeOrder);
+        view.showSerieStart(startDate);
+        view.showSerieEnd(endDate);
+        view.showSerieGenres(data.getGenres());
+        view.showSerieDescription(description);
+    }
+
+
+    private String formatDescription(String description){
+
+        String trimmed = description.replace("\n", "").replace("<br>", "").trim();
+
+        if(TextUtils.isEmpty(trimmed)){
+            return "No description available";
+        }
+
+        return description.replace("<br>", "\n").trim();
+    }
+
+    private String formatStartEndDate(String date){
+        if(date.equals("Unknown")){
+            return date;
+        }
+
+        DateTime emissionTime;
+
+        // TRY-CATCH required for different formats provided (ie: The Flash and Game Of Thrones)
+        // Is ugly, I know, but there are many different formats and it's impossible to check them all
+        try {
+            String pattern = "MMM/dd/yyyy";
+            emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+        } catch (IllegalArgumentException exception){
+
+            try {
+                String pattern = "yyyy-MM-dd";
+                emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+            } catch (IllegalArgumentException e){
+                return date;
+            }
+        }
+
+        int day = emissionTime.getDayOfMonth();
+        int month = emissionTime.getMonthOfYear();
+        int year = emissionTime.getYear();
+
+        return day + "/" + month + "/" + year;
+
+    }
+
+    private String getNextEpisodeOrder(SerieDetail data) {
+        int season = data.getSeason();
+
+        if(season == 0){
+            return "Next episode";
+        }
+
+        return "Next episode  (S" + zeroPad(season) + " E" + zeroPad(data.getEpisode())+")";
+    }
+
+    private String formatNextEpisode(SerieDetail detail){
+
+        String episodeName = detail.getEpisodeName();
+
+        if(episodeName.equals("Unknown")){
+
+            int season = detail.getSeason();
+
+            if(season == 0){
+                return episodeName;
+            }
+
+            return "Season " + season + " Episode " + detail.getEpisode();
+        } else if (episodeName.equals("TBA")){
+            return "To Be Announced";
+        }
+
+        return episodeName;
+
+    }
+
+    private String formatAirDate(String airDate){
+        if(airDate.equals("Unknown")){
+            return airDate;
+        }
+
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(airDate).toDateTime();
+
+        int month = emissionTime.getMonthOfYear();
+
+        int day = emissionTime.getDayOfMonth();
+
+        int year = emissionTime.getYear();
+
+        String date = day + "/" + month + "/" + year;
+        return date;
+
     }
 
     private String getTimeUntilNextEpisode(String dateNextEpisode){
 
-        if(dateNextEpisode == null){
+        if(dateNextEpisode.equals("Unknown")){
             return "Unavailable";
         }
 
-        String pattern = "MMMMM dd, yyyy HH:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm:ss";
 
         DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(dateNextEpisode).toDateTime();
         DateTime currentTime = DateTime.now();
@@ -89,12 +224,19 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
             view.setFavoritable(false);
         }
 
+    }
 
+    private String zeroPad(int number){
+        return number < 10 ? "0"+number : ""+number;
     }
 
     @Override
     public void onError() {
         view.hideProgress();
         view.showError();
+    }
+
+    public DetailPersistance getPersistance(){
+        return new DetailPersistance(showingDetail);
     }
 }

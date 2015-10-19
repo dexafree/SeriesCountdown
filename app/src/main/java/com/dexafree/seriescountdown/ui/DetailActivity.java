@@ -3,18 +3,15 @@ package com.dexafree.seriescountdown.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.transition.Transition;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -23,12 +20,13 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.interfaces.DetailView;
 import com.dexafree.seriescountdown.model.Serie;
-import com.dexafree.seriescountdown.model.SerieInfo;
+import com.dexafree.seriescountdown.persistence.PersistableObject;
 import com.dexafree.seriescountdown.presenters.DetailPresenter;
 import com.dexafree.seriescountdown.ui.views.MaterialRow;
 import com.squareup.picasso.Picasso;
@@ -37,19 +35,21 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Carlos on 1/9/15.
- */
 public class DetailActivity extends BaseActivity implements DetailView {
 
     public static final String EXTRA_IMAGE = "DetailActivity:serie_image";
     public final static String SERIE_EXTRA = "serie";
+
+    private final static String PRESENTER_PERSISTANCE = "presenter_persistance";
 
     @Bind(R.id.serie_image)
     ImageView serieImage;
 
     @Bind(R.id.time_remaining_textview)
     TextView timeRemainingTextView;
+
+    @Bind(R.id.serie_description)
+    TextView serieDescriptionTextView;
 
     @Bind(R.id.next_episode_date_row)
     MaterialRow dateRow;
@@ -71,6 +71,9 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
     @Bind(R.id.favorite_fab)
     FloatingActionButton favoriteFAB;
+
+    @Bind(R.id.progress_view)
+    ProgressBar progressView;
 
     @OnClick(R.id.favorite_fab)
     void onFabClicked(){
@@ -99,7 +102,14 @@ public class DetailActivity extends BaseActivity implements DetailView {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        presenter.init();
+
+        if(savedInstanceState != null && savedInstanceState.containsKey(PRESENTER_PERSISTANCE)){
+            PersistableObject persistance = savedInstanceState.getParcelable(PRESENTER_PERSISTANCE);
+            presenter.init(persistance);
+        } else {
+            presenter.init();
+        }
+
     }
 
     private void init(){
@@ -119,17 +129,19 @@ public class DetailActivity extends BaseActivity implements DetailView {
         }
         setExitTransition();
 
+        progressView.setIndeterminate(true);
 
     }
 
     @Override
     public void showProgress() {
-
+        progressView.setVisibility(View.VISIBLE);
+        progressView.setProgress(1);
     }
 
     @Override
     public void hideProgress() {
-
+        progressView.setVisibility(View.GONE);
     }
 
     @Override
@@ -145,9 +157,10 @@ public class DetailActivity extends BaseActivity implements DetailView {
     }
 
     @Override
-    public void showNextEpisodeNumber(String text) {
-        nameRow.setRowContent(text);
-        nameRow.setHintText("Next episode");
+    public void showNextEpisodeInfo(String title, String subtitle) {
+
+        nameRow.setRowContent(title);
+        nameRow.setHintText(subtitle);
     }
 
     @Override
@@ -169,6 +182,11 @@ public class DetailActivity extends BaseActivity implements DetailView {
     }
 
     @Override
+    public void showSerieDescription(String text) {
+        serieDescriptionTextView.setText(text);
+    }
+
+    @Override
     public void showError() {
         showToast("ERROR");
     }
@@ -186,12 +204,17 @@ public class DetailActivity extends BaseActivity implements DetailView {
         favoriteFAB.setImageResource(drawable);
     }
 
-    private void loadFullSizeImage(){
+    @Override
+    public void makeContentVisible() {
+        fadeInContent();
+    }
+
+    @Override
+    public void loadFullSizeImage(){
         Picasso.with(this)
                 .load(mSerie.getImageHDUrl())
                 .noFade()
                 .noPlaceholder()
-                .fit().centerCrop()
                 .into(serieImage);
     }
 
@@ -199,7 +222,7 @@ public class DetailActivity extends BaseActivity implements DetailView {
         Picasso.with(this)
                 .load(mSerie.getImageUrl())
                 .noFade()
-                .fit().centerCrop()
+                .noPlaceholder()
                 .into(serieImage);
     }
 
@@ -364,6 +387,13 @@ public class DetailActivity extends BaseActivity implements DetailView {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Parcelable presenterState = presenter.getPersistance();
+        outState.putParcelable(PRESENTER_PERSISTANCE, presenterState);
     }
 
     public static void launch(Activity activity, View transitionView, Serie serie) {

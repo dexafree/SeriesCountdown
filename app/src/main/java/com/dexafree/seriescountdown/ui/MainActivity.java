@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.adapters.ViewPagerAdapter;
-import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.ui.fragments.FavoriteSeriesFragment;
 import com.dexafree.seriescountdown.ui.fragments.PopularSeriesFragment;
 

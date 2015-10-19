@@ -13,9 +13,6 @@ import com.dexafree.seriescountdown.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Carlos on 4/9/15.
- */
 public class MaterialRow extends RelativeLayout {
 
     @Bind(R.id.row_image)

@@ -13,9 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by Carlos on 1/9/15.
- */
 public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder> {
 
 
@@ -38,12 +35,8 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
         holder.text.setText(item.getName());
         holder.image.setImageBitmap(null);
 
-        /*Picasso.with(holder.image.getContext())
-                .cancelRequest(holder.image);*/
-
         Picasso.with(holder.image.getContext())
                 .load(item.getImageUrl())
-                .fit().centerCrop()
                 .into(holder.image);
 
         holder.itemView.setTag(item);

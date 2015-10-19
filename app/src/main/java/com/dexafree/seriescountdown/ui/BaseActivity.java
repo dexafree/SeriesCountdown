@@ -8,9 +8,6 @@ import android.widget.Toast;
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.interfaces.IBaseView;
 
-/**
- * Created by Carlos on 1/9/15.
- */
 public class BaseActivity extends AppCompatActivity implements IBaseView {
 
 

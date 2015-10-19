@@ -18,7 +18,6 @@ import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.presenters.SearchPresenter;
 import com.dexafree.seriescountdown.utils.RecyclerClickListener;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +27,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
-import rx.functions.Action1;
 
-/**
- * Created by Carlos on 5/9/15.
- */
 public class SearchActivity extends BaseActivity implements ISearchView {
-
-    private final static String EXTRA_IMAGE = "SearchActivity:fabimage";
-    private final static long ANIM_DURATION = 1000;
 
     @Bind(R.id.content_layout)
     RelativeLayout contentLayout;
@@ -72,6 +64,7 @@ public class SearchActivity extends BaseActivity implements ISearchView {
 
         RxTextView
                 .textChangeEvents(searchEditText)
+                .filter(event -> event.text().length() >= 3)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .subscribe(event -> presenter.onTextChanged(event.text().toString()));
 

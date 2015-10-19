@@ -1,117 +1,118 @@
 package com.dexafree.seriescountdown.interactors;
 
-import android.util.Log;
-
 import com.arasthel.asyncjob.AsyncJob;
+import com.dexafree.seriescountdown.model.CountDown;
 import com.dexafree.seriescountdown.model.Serie;
-import com.dexafree.seriescountdown.model.SerieInfo;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import com.dexafree.seriescountdown.model.SerieDetail;
+import com.dexafree.seriescountdown.utils.ContentUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
-/**
- * Created by Carlos on 2/9/15.
- */
-public class SerieDetailInteractor {
-
-    private final static String BASE_URL = "http://www.episodate.com/tv-show/";
-
-    private final static String NEXT_EPISODE_SELECTOR = "b.color-green";
-    private final static String NEXT_EPISODE_DATE_SELECTOR = "b.episode_datetime_convert";
-    private final static String NEXT_EPISODE_REMAINING = ".countdownTime";
-    private final static String SERIE_CATEGORIES = "div > div > div.row.text-size-15.line-height-200.text-left > div > div";
+import fj.data.IterableW;
 
 
-    public interface Callback {
-        void onSerieInfoDownloaded(SerieInfo info);
-        void onError();
-    }
+public class SerieDetailInteractor extends BaseInteractor<SerieDetail> {
 
-    private Callback callback;
+    private final static String API_ENDPOINT = "https://www.episodate.com/api/show-details?query=";
+
+    public interface Callback extends BaseInteractor.Callback<SerieDetail>{}
 
     public SerieDetailInteractor(Callback callback) {
-        this.callback = callback;
+        super(callback);
     }
 
-    public void loadSerieInfo(Serie serie){
+    public void loadSerieDetails(Serie serie){
+
+        final String urlString = API_ENDPOINT + serie.getCodeName();
+
         AsyncJob.doInBackground(() -> {
 
             try {
-                Document doc = Jsoup.connect(BASE_URL + serie.getCodeName())
-                        .timeout(5000)
-                        .get();
 
-                parseDocument(doc);
+                URL url = new URL(urlString);
 
-            } catch (IOException e){
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                String content = ContentUtils.readContentFromStream(connection.getInputStream());
+
+                SerieDetail detail = parseContent(content);
+                sendResult(detail);
+
+            } catch (IOException e) {
                 e.printStackTrace();
                 sendError();
             }
 
-
         });
-    }
-
-    private void parseDocument(Document doc){
-
-        String nextEpisode = "Unavailable";
-
-        Element nextEpisodeElement = doc.select(NEXT_EPISODE_SELECTOR).first();
-
-        if(nextEpisodeElement != null){
-            nextEpisode = nextEpisodeElement.text();
-        }
-
-        String nextEpisodeDate = "Unknown";
-
-        Element nextEpisodeDateElement = doc.select(NEXT_EPISODE_DATE_SELECTOR).first();
-
-        if(nextEpisodeDateElement != null){
-            nextEpisodeDate = nextEpisodeDateElement.text();
-        }
-
-        Elements categories = doc.select(SERIE_CATEGORIES);
-
-        Element genreElement = categories.get(0);
-        Element statusElement = categories.get(2);
-        Element startElement = categories.get(3);
-        Element endElement = categories.get(4);
-        Element timeRemainingNext = doc.select(NEXT_EPISODE_REMAINING).first();
-
-        String genreRaw = genreElement.text().split(": ")[1];
-        String status = statusElement.text();
-        String start = startElement.text().split(": ")[1];
-        String end = endElement.text().split(": ")[1];
-
-
-        String[] genreSplits = genreRaw.split("\\|");
-        String genre = genreSplits[0].trim();
-
-        for(int i=1;i<genreSplits.length;i++){
-            genre += (", " + genreSplits[i].trim());
-        }
-
-        String timeRemainingNextEpisode = null;
-
-        if(timeRemainingNext != null){
-            timeRemainingNextEpisode = timeRemainingNext.attr("data-date");
-        }
-
-
-        SerieInfo info = new SerieInfo(genre, status, start, end, timeRemainingNextEpisode, nextEpisode, nextEpisodeDate);
-        sendResults(info);
 
     }
 
-    private void sendResults(SerieInfo info){
-        AsyncJob.doOnMainThread(() -> callback.onSerieInfoDownloaded(info));
+    private SerieDetail parseContent(String content){
+
+        Gson gson = new GsonBuilder().create();
+
+        JsonObject response = gson.fromJson(content, JsonObject.class);
+        JsonObject root = response.get("tvShow").getAsJsonObject();
+
+        int id = root.get("id").getAsInt();
+        String name = extractAttribute(root, "name");
+        String codeName = extractAttribute(root, "permalink");
+        String description = ContentUtils.cleanHTMLtags(extractAttribute(root, "description"));
+        String startDate = extractAttribute(root, "start_date");
+        String endDate = extractAttribute(root, "end_date");
+        String imageThumbnailPath = extractAttribute(root, "image_thumbnail_path").replace("http:", "https:");
+        String imagePath = extractAttribute(root, "image_path").replace("http:", "https:");
+        String rating = extractAttribute(root, "rating");
+        ArrayList<String> genres = extractGenres(root);
+        CountDown countDown = extractCountdown(root);
+
+        return new SerieDetail(id, name, codeName, description, startDate, endDate,
+                               imageThumbnailPath, imagePath, rating, genres, countDown);
     }
 
-    private void sendError(){
-        AsyncJob.doOnMainThread(callback::onError);
+    private String extractAttribute(JsonObject root, String attribute){
+        JsonElement element = root.get(attribute);
+        if(!element.isJsonNull()){
+            return element.getAsString();
+        } else {
+            return "Unknown";
+        }
     }
+
+    private ArrayList<String> extractGenres(JsonObject root){
+        JsonArray genresArray = root.get("genres").getAsJsonArray();
+
+        IterableW<JsonElement> elements = IterableW.wrap(genresArray);
+
+        ArrayList<String> genres = new ArrayList<>(elements.map(JsonElement::getAsString).toStandardList());
+        return genres;
+    }
+
+    private CountDown extractCountdown(JsonObject root){
+
+        JsonElement countDownElement = root.get("countdown");
+
+        if(countDownElement.isJsonNull()){
+            return null;
+        }
+
+        JsonObject countDown = countDownElement.getAsJsonObject();
+
+        int season = countDown.get("season").getAsInt();
+        int episode = countDown.get("episode").getAsInt();
+        String name = countDown.get("name").getAsString();
+        String airDate = countDown.get("air_date").getAsString();
+
+        return new CountDown(season, episode, name, airDate);
+
+    }
+
 }

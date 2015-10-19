@@ -1,9 +1,7 @@
 package com.dexafree.seriescountdown.presenters;
 
 
-import android.util.Log;
-
-import com.dexafree.seriescountdown.interactors.GetSeriesInteractor;
+import com.dexafree.seriescountdown.interactors.SearchSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SearchSuggestionsInteractor;
 import com.dexafree.seriescountdown.interfaces.ISearchView;
 import com.dexafree.seriescountdown.model.Serie;
@@ -13,14 +11,11 @@ import java.util.List;
 import rx.Observer;
 import rx.Subscription;
 
-/**
- * Created by Carlos on 5/9/15.
- */
 public class SearchPresenter {
 
     private ISearchView view;
     private SearchSuggestionsInteractor searchSuggestionsInteractor;
-    private GetSeriesInteractor getSeriesInteractor;
+    private SearchSeriesInteractor getSeriesInteractor;
 
     private Subscription getSeriesSubscription;
     private Subscription getSuggestionsSubscription;
@@ -68,7 +63,7 @@ public class SearchPresenter {
     public SearchPresenter(ISearchView view) {
         this.view = view;
         this.searchSuggestionsInteractor = new SearchSuggestionsInteractor();
-        this.getSeriesInteractor = new GetSeriesInteractor();
+        this.getSeriesInteractor = new SearchSeriesInteractor();
         this.searchPage = 1;
     }
 

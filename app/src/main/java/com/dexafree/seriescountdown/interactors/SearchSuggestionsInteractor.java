@@ -14,7 +14,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import rx.Observable;
@@ -23,12 +22,9 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Carlos on 4/9/15.
- */
 public class SearchSuggestionsInteractor {
 
-    private final static String SUGGESTIONS_API_ENDPOINT = "http://www.episodate.com/api/search-suggestions?query=";
+    private final static String SUGGESTIONS_API_ENDPOINT = "https://www.episodate.com/api/search-suggestions?query=";
 
     public Subscription loadSuggestions(Observer<List<String>> observer, String query){
 
