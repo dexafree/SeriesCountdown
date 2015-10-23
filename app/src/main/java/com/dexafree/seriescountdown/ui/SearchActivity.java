@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.adapters.SeriesAdapter;
@@ -17,6 +18,7 @@ import com.dexafree.seriescountdown.interfaces.ISearchView;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.presenters.SearchPresenter;
 import com.dexafree.seriescountdown.utils.RecyclerClickListener;
+import com.jakewharton.rxbinding.widget.RxAutoCompleteTextView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.util.ArrayList;
@@ -68,6 +70,13 @@ public class SearchActivity extends BaseActivity implements ISearchView {
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .subscribe(event -> presenter.onTextChanged(event.text().toString()));
 
+        RxAutoCompleteTextView
+                .itemClickEvents(searchEditText)
+                .subscribe(event ->{
+                    String query = ((TextView)event.clickedView()).getText().toString();
+                    presenter.onSuggestionClicked(query);
+                });
+
         seriesAdapter = new SeriesAdapter(new ArrayList<>());
 
         seriesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) {
@@ -88,11 +97,6 @@ public class SearchActivity extends BaseActivity implements ISearchView {
                 (view, position) -> presenter.onItemClicked(position)));
 
         seriesRecyclerView.setAdapter(seriesAdapter);
-
-        searchEditText.setOnItemClickListener((parent, view, position, id) -> {
-            String query = parent.getAdapter().getItem(position).toString();
-            presenter.searchText(query);
-        });
     }
 
     private void scrollFinished(){
@@ -113,6 +117,12 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         } else {
             searchEditText.dismissDropDown();
         }
+    }
+
+    @Override
+    public void hideSuggestions() {
+        searchEditText.setAdapter(null);
+        searchEditText.dismissDropDown();
     }
 
     @Override

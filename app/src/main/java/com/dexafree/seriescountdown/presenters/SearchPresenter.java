@@ -21,6 +21,7 @@ public class SearchPresenter {
     private Subscription getSuggestionsSubscription;
 
     private int searchPage;
+    private boolean suggestionClicked;
 
     private final Observer<Serie> getSeriesObserver = new Observer<Serie>() {
         @Override
@@ -56,7 +57,12 @@ public class SearchPresenter {
 
         @Override
         public void onNext(List<String> strings) {
-            view.showSuggestions(strings);
+            if(!suggestionClicked) {
+                view.showSuggestions(strings);
+            } else {
+                suggestionClicked = false;
+                view.hideSuggestions();
+            }
         }
     };
 
@@ -65,6 +71,7 @@ public class SearchPresenter {
         this.searchSuggestionsInteractor = new SearchSuggestionsInteractor();
         this.getSeriesInteractor = new SearchSeriesInteractor();
         this.searchPage = 1;
+        this.suggestionClicked = false;
     }
 
     public void onTextChanged(String text){
@@ -84,6 +91,11 @@ public class SearchPresenter {
         view.cleanList();
         this.searchPage = 1;
         this.getSeriesSubscription = getSeriesInteractor.searchSeries(getSeriesObserver, text, searchPage++);
+    }
+
+    public void onSuggestionClicked(String text){
+        this.suggestionClicked = true;
+        searchText(text);
     }
 
     public void onItemClicked(int position){

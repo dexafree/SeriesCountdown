@@ -8,6 +8,7 @@ public interface ISearchView extends IBaseView {
 
 
     void showSuggestions(List<String> suggestions);
+    void hideSuggestions();
     void addSerie(Serie serie);
     void cleanList();
     void showSearchError();
