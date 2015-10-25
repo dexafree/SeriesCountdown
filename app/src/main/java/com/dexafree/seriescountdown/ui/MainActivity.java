@@ -15,6 +15,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * Launching Activity.
+ * It will have ViewPager with two Fragments
+ */
 public class MainActivity extends BaseActivity {
 
 
@@ -29,6 +33,10 @@ public class MainActivity extends BaseActivity {
         startActivity(new Intent(this, SearchActivity.class));
     }
 
+    /*
+        Hard reference to the FavoriteSeriesFragment.
+        It's needed to update the favorited series
+     */
     private FavoriteSeriesFragment favoriteSeriesFragment;
 
 
@@ -43,7 +51,11 @@ public class MainActivity extends BaseActivity {
 
 
     private void prepareViews(){
+
+        // Prepare the ViewPager
         setupViewPager();
+
+        // Link the TabLayout with the ViewPager
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -51,9 +63,12 @@ public class MainActivity extends BaseActivity {
 
         this.favoriteSeriesFragment = new FavoriteSeriesFragment();
 
+        // Create the ViewPagerAdapter and populate it
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new PopularSeriesFragment(), "POPULAR");
         adapter.addFrag(favoriteSeriesFragment, "FAVORITES");
+
+        // Set the adapter to the ViewPager
         viewPager.setAdapter(adapter);
     }
 
@@ -61,8 +76,14 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (favoriteSeriesFragment != null){
+
+            /*
+                If the Activity comes back from another Activity (i.e. SearchActivity or
+                DetailActivity), reload the series shown in the FavoriteSeriesFragment
+             */
             favoriteSeriesFragment.reloadSeries();
         } else {
+            // It will be null when the Activity first launches
             Log.d("MAINACTIVITY", "FRAGMENT IS NULL");
         }
     }
