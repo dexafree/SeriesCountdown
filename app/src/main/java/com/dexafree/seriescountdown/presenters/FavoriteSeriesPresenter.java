@@ -66,7 +66,7 @@ public class FavoriteSeriesPresenter extends BaseSerieListPresenter<FavoriteSeri
     @Override
     public void onError(Throwable e) {
         e.printStackTrace();
-        Log.d("FAVORITESERIESINTERACTOR", e.getMessage());
+        Log.e("FAVORITESERIESINTERACTOR", e.getMessage());
         view.showError();
     }
 
