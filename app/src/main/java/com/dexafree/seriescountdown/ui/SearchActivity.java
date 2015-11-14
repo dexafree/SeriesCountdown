@@ -106,8 +106,10 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         // Initialize the adapter with an empty list
         seriesAdapter = new SeriesAdapter(new ArrayList<>());
 
+        int numColumns = getResources().getInteger(R.integer.series_columns);
+
         // Create a 2 column GridLayoutManager
-        seriesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) {
+        seriesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns) {
 
             // Override the method to be able to detect overscroll
             @Override

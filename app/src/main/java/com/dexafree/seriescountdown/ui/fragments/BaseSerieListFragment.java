@@ -50,7 +50,10 @@ public abstract class BaseSerieListFragment<T extends BaseSerieListPresenter> ex
     }
 
     private void prepareViews(){
-        seriesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) {
+
+        int numColumns = getResources().getInteger(R.integer.series_columns);
+
+        seriesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns) {
             @Override
             public int scrollVerticallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
                 int scrollRange = super.scrollVerticallyBy(dx, recycler, state);

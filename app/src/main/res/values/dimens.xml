@@ -5,4 +5,6 @@
 
     <dimen name="big_padding">16dp</dimen>
     <dimen name="small_padding">8dp</dimen>
+
+    <integer name="series_columns">2</integer>
 </resources>
