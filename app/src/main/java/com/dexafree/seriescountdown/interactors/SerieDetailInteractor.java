@@ -5,6 +5,7 @@ import com.dexafree.seriescountdown.model.CountDown;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.model.SerieDetail;
 import com.dexafree.seriescountdown.utils.ContentUtils;
+import com.dexafree.seriescountdown.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -15,9 +16,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
-import fj.data.IterableW;
-
+import java.util.List;
 
 public class SerieDetailInteractor extends BaseInteractor<SerieDetail> {
 
@@ -90,9 +89,9 @@ public class SerieDetailInteractor extends BaseInteractor<SerieDetail> {
     private ArrayList<String> extractGenres(JsonObject root){
         JsonArray genresArray = root.get("genres").getAsJsonArray();
 
-        IterableW<JsonElement> elements = IterableW.wrap(genresArray);
+        List<String> genres = Utils.map(genresArray, JsonElement::getAsString);
 
-        return new ArrayList<>(elements.map(JsonElement::getAsString).toStandardList());
+        return new ArrayList<>(genres);
     }
 
     private CountDown extractCountdown(JsonObject root){
