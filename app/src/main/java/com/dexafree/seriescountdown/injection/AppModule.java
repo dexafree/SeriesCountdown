@@ -4,6 +4,8 @@ import com.dexafree.seriescountdown.interactors.service.ApiService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import retrofit.RestAdapter;
@@ -15,6 +17,7 @@ public class AppModule {
     private final static String ENDPOINT = "https://www.episodate.com/api/";
 
 
+    @Singleton
     @Provides
     ApiService provideApiService(){
         Gson gson = new GsonBuilder()
