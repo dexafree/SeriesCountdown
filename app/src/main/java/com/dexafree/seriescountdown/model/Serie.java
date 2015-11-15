@@ -3,11 +3,19 @@ package com.dexafree.seriescountdown.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
+
 public class Serie implements Parcelable {
 
-    private String name;
-    private String codeName;
-    private String imageUrl;
+    @SerializedName("name")
+    String name;
+
+    @SerializedName("permalink")
+    String codeName;
+
+    @SerializedName("image_thumbnail_path")
+    String imageUrl;
 
     public Serie(String name, String codeName, String imageUrl) {
         this.name = name;
@@ -24,19 +32,23 @@ public class Serie implements Parcelable {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        String tempUrl = imageUrl.replace("http:", "https:");
+        if(tempUrl.equalsIgnoreCase("https://www.episodate.com")){
+            return "http://i.imgur.com/443ZL8t.jpg";
+        }
+        return tempUrl;
     }
 
-    public String getImageHDUrl(){
-        return imageUrl.replace("thumbnail", "full");
+    public String getImageHDUrl() {
+        return getImageUrl().replace("thumbnail", "full");
     }
 
     @Override
     public boolean equals(Object o) {
 
-        if(o instanceof Serie){
+        if (o instanceof Serie) {
 
-            Serie newSerie = (Serie)o;
+            Serie newSerie = (Serie) o;
 
             return name.equals(newSerie.name) && codeName.equals(newSerie.codeName) && imageUrl.equals(newSerie.imageUrl);
 
@@ -71,4 +83,10 @@ public class Serie implements Parcelable {
             return new Serie[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "NAME: "+name+" | CODENAME: "+codeName+" | URL: "+getImageUrl();
+    }
 }
+
