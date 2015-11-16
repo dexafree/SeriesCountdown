@@ -4,16 +4,19 @@ import com.dexafree.seriescountdown.interactors.BaseSeriesInteractor;
 import com.dexafree.seriescountdown.interfaces.SeriesView;
 import com.dexafree.seriescountdown.model.Serie;
 
+import javax.inject.Inject;
+
 import rx.Observer;
 
 public abstract class BaseSerieListPresenter<T extends BaseSeriesInteractor> implements Observer<Serie> {
 
+    @Inject
+    T interactor;
+
     protected SeriesView view;
-    protected T interactor;
 
     public BaseSerieListPresenter(SeriesView view){
         this.view = view;
-        this.interactor = getInteractor();
     }
 
     public abstract void init();
@@ -21,7 +24,5 @@ public abstract class BaseSerieListPresenter<T extends BaseSeriesInteractor> imp
     public void onItemClicked(int position){
         view.startDetailActivity(position);
     }
-
-    protected abstract T getInteractor();
 
 }

@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.dexafree.seriescountdown.BuildConfig;
 import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.database.DatabaseOpenHelper;
+import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
+import com.dexafree.seriescountdown.interactors.GetPopularSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SearchSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SearchSuggestionsInteractor;
 import com.dexafree.seriescountdown.interactors.service.ApiService;
@@ -27,6 +29,18 @@ public class AppModule {
 
     public AppModule(SeriesCountdown application){
         this.application = application;
+    }
+
+    @Singleton
+    @Provides
+    GetPopularSeriesInteractor providePopularSeriesInteractor(){
+        return new GetPopularSeriesInteractor();
+    }
+
+    @Singleton
+    @Provides
+    FavoriteSeriesInteractor provideFavoriteSeriesInteractor(){
+        return new FavoriteSeriesInteractor();
     }
 
     @Singleton
