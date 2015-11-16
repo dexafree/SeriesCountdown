@@ -20,7 +20,7 @@ public class FavoriteSeriesPresenter extends BaseSerieListPresenter<FavoriteSeri
     }
 
     protected FavoriteSeriesInteractor getInteractor() {
-        return new FavoriteSeriesInteractor(view);
+        return new FavoriteSeriesInteractor();
     }
 
     @Override

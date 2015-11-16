@@ -109,7 +109,7 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         int numColumns = getResources().getInteger(R.integer.series_columns);
 
         // Create a 2 column GridLayoutManager
-        seriesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns) {
+        seriesRecyclerView.setLayoutManager(new GridLayoutManager(this, numColumns) {
 
             // Override the method to be able to detect overscroll
             @Override
@@ -131,7 +131,7 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         seriesRecyclerView.getItemAnimator().setRemoveDuration(300);
 
         // Set the onClickListener
-        seriesRecyclerView.addOnItemTouchListener(new RecyclerClickListener(getContext(),
+        seriesRecyclerView.addOnItemTouchListener(new RecyclerClickListener(this,
                 (view, position) -> presenter.onItemClicked(position)));
 
         // Set the adapter

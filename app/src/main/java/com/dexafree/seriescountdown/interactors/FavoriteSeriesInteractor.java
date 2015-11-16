@@ -4,14 +4,15 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.dexafree.seriescountdown.database.DatabaseOpenHelper;
+import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.database.tables.FavoriteSeriesTable;
-import com.dexafree.seriescountdown.interfaces.IBaseView;
 import com.dexafree.seriescountdown.model.Serie;
 
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Observer;
@@ -19,10 +20,11 @@ import rx.Subscription;
 
 public class FavoriteSeriesInteractor extends BaseSeriesInteractor {
 
-    private SQLiteDatabase database;
+    @Inject
+    SQLiteDatabase database;
 
-    public FavoriteSeriesInteractor(IBaseView view) {
-        this.database = new DatabaseOpenHelper(view.getContext()).getWritableDatabase();
+    public FavoriteSeriesInteractor() {
+        SeriesCountdown.inject(this);
     }
 
     public Subscription loadSeries(Observer<Serie> observer) {

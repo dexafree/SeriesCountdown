@@ -31,7 +31,7 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
     public DetailPresenter(DetailView view) {
         this.view = view;
         this.interactor = new SerieDetailInteractor(this);
-        this.favoriteSeriesInteractor = new FavoriteSeriesInteractor(view);
+        this.favoriteSeriesInteractor = new FavoriteSeriesInteractor();
     }
 
     public void init(){

@@ -4,7 +4,7 @@ import com.dexafree.seriescountdown.model.Serie;
 
 import java.util.List;
 
-public interface SeriesView extends IBaseView {
+public interface SeriesView {
 
     void addItem(Serie serie);
     void updateSeries(List<Serie> series);
