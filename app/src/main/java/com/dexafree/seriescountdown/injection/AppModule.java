@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.dexafree.seriescountdown.BuildConfig;
 import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.database.DatabaseOpenHelper;
+import com.dexafree.seriescountdown.interactors.SearchSeriesInteractor;
+import com.dexafree.seriescountdown.interactors.SearchSuggestionsInteractor;
 import com.dexafree.seriescountdown.interactors.service.ApiService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,6 +27,18 @@ public class AppModule {
 
     public AppModule(SeriesCountdown application){
         this.application = application;
+    }
+
+    @Singleton
+    @Provides
+    SearchSeriesInteractor provideSearchSeriesInteractor(){
+        return new SearchSeriesInteractor();
+    }
+
+    @Singleton
+    @Provides
+    SearchSuggestionsInteractor provideSearchSuggestionsInteractor(){
+        return new SearchSuggestionsInteractor();
     }
 
     @Singleton

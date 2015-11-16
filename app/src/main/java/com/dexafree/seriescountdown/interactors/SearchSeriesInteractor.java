@@ -15,11 +15,11 @@ import rx.schedulers.Schedulers;
 
 public class SearchSeriesInteractor extends BaseSeriesInteractor {
 
-    private String lastQuery;
-    private int maxPages = -1;
-
     @Inject
     ApiService apiService;
+
+    private String lastQuery;
+    private int maxPages = -1;
 
     public SearchSeriesInteractor(){
         SeriesCountdown.inject(this);
@@ -38,6 +38,11 @@ public class SearchSeriesInteractor extends BaseSeriesInteractor {
 
             return apiService.searchSerie(sanitizedQuery, page)
                     .map(response -> {
+
+                        if(response.getMaxPages() == 0){
+                            throw new EmptySerieListException();
+                        }
+
                         maxPages = response.getMaxPages();
                         return response.getTvShows();
                     })
@@ -49,5 +54,7 @@ public class SearchSeriesInteractor extends BaseSeriesInteractor {
 
         return null;
     }
+
+    public static class EmptySerieListException extends RuntimeException {}
 
 }

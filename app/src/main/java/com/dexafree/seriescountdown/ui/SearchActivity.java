@@ -4,17 +4,19 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dexafree.seriescountdown.R;
 import com.dexafree.seriescountdown.adapters.SeriesAdapter;
-import com.dexafree.seriescountdown.interfaces.ISearchView;
+import com.dexafree.seriescountdown.interfaces.SearchView;
 import com.dexafree.seriescountdown.model.Serie;
 import com.dexafree.seriescountdown.presenters.SearchPresenter;
 import com.dexafree.seriescountdown.utils.RecyclerClickListener;
@@ -33,7 +35,7 @@ import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
 /**
  * Activity that will provide search capabilities
  */
-public class SearchActivity extends BaseActivity implements ISearchView {
+public class SearchActivity extends BaseActivity implements SearchView {
 
     @Bind(R.id.content_layout)
     RelativeLayout contentLayout;
@@ -43,6 +45,9 @@ public class SearchActivity extends BaseActivity implements ISearchView {
 
     @Bind(R.id.series_recyclerview)
     RecyclerView seriesRecyclerView;
+
+    @Bind(R.id.progress_view)
+    ProgressBar progressBar;
 
     /**
      * Whenever the Search button is pressed, get the text and tell the presenter to search the text
@@ -68,12 +73,32 @@ public class SearchActivity extends BaseActivity implements ISearchView {
 
         // Instantiate the presenter
         presenter = new SearchPresenter(this);
+
+        // Prepare the views
+        prepareViews();
+    }
+
+    private void prepareViews(){
+
+        // Prepare the lists
         prepareLists();
+
+        // Make the "Enter" press act like the "Search" click
+        searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN)
+                    && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                onSearchButtonClick();
+            }
+            return false;
+        });
+
+
+        // Show the "Go back" button at the ActionBar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     private void prepareLists(){
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         /*
             Observe the AutoCompleteEditText.
@@ -203,12 +228,32 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         seriesAdapter.clearItems();
     }
 
+
+
     /**
      * Shows a search error
      */
     @Override
     public void showSearchError() {
         showToast("Search error");
+    }
+
+
+    @Override
+    public void showNoResults() {
+        showToast("There are no results");
+    }
+
+    @Override
+    public void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+        seriesRecyclerView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideLoading() {
+        progressBar.setVisibility(View.GONE);
+        seriesRecyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
