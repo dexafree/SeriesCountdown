@@ -14,7 +14,7 @@ public class SeriesCountdown extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        component = Dagger2Helper.buildComponent(AppComponent.class, new AppModule());
+        component = Dagger2Helper.buildComponent(AppComponent.class, new AppModule(this));
     }
 
     public static void inject(Object target) {

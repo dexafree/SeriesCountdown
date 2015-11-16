@@ -2,6 +2,7 @@ package com.dexafree.seriescountdown.presenters;
 
 import android.util.Log;
 
+import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.interactors.GetPopularSeriesInteractor;
 import com.dexafree.seriescountdown.interfaces.SeriesView;
 import com.dexafree.seriescountdown.model.Serie;
@@ -17,10 +18,9 @@ public class PopularSeriesPresenter extends BaseSerieListPresenter<GetPopularSer
     public PopularSeriesPresenter(SeriesView view){
         super(view);
         this.currentPage = 1;
-    }
 
-    public GetPopularSeriesInteractor getInteractor() {
-        return new GetPopularSeriesInteractor();
+        // Inject the presenter
+        SeriesCountdown.inject(this);
     }
 
     @Override

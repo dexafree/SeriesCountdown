@@ -2,7 +2,7 @@ package com.dexafree.seriescountdown.interfaces;
 
 import com.dexafree.seriescountdown.model.Serie;
 
-public interface DetailView extends IBaseView {
+public interface DetailView {
 
     void showProgress();
     void hideProgress();

@@ -2,6 +2,7 @@ package com.dexafree.seriescountdown.presenters;
 
 import android.util.Log;
 
+import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
 import com.dexafree.seriescountdown.interfaces.SeriesView;
 import com.dexafree.seriescountdown.model.Serie;
@@ -17,10 +18,9 @@ public class FavoriteSeriesPresenter extends BaseSerieListPresenter<FavoriteSeri
 
     public FavoriteSeriesPresenter(SeriesView view){
         super(view);
-    }
 
-    protected FavoriteSeriesInteractor getInteractor() {
-        return new FavoriteSeriesInteractor(view);
+        // Inject the presenter
+        SeriesCountdown.inject(this);
     }
 
     @Override

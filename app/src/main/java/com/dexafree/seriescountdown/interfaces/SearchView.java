@@ -4,7 +4,7 @@ import com.dexafree.seriescountdown.model.Serie;
 
 import java.util.List;
 
-public interface ISearchView extends IBaseView {
+public interface SearchView {
 
 
     void showSuggestions(List<String> suggestions);
@@ -12,6 +12,10 @@ public interface ISearchView extends IBaseView {
     void addSerie(Serie serie);
     void cleanList();
     void showSearchError();
+    void showNoResults();
+
+    void showLoading();
+    void hideLoading();
 
     boolean isShowingSerie(Serie serie);
     void startDetailActivity(int position);
