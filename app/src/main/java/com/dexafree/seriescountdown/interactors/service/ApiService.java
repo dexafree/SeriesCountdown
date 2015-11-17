@@ -2,6 +2,7 @@ package com.dexafree.seriescountdown.interactors.service;
 
 
 import com.dexafree.seriescountdown.interactors.model.SearchResponse;
+import com.dexafree.seriescountdown.model.SerieDetail;
 
 import java.util.List;
 
@@ -19,5 +20,8 @@ public interface ApiService {
 
     @GET("/search-suggestions")
     Observable<List<String>> getSuggestions(@Query("query") String query);
+
+    @GET("/show-details")
+    Observable<SerieDetail> getDetails(@Query("query") String query);
 
 }

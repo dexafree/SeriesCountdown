@@ -4,6 +4,7 @@ import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.GetPopularSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SearchSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SearchSuggestionsInteractor;
+import com.dexafree.seriescountdown.interactors.SerieDetailInteractor;
 import com.dexafree.seriescountdown.interactors.service.ApiService;
 import com.dexafree.seriescountdown.presenters.BaseSerieListPresenter;
 import com.dexafree.seriescountdown.presenters.DetailPresenter;
@@ -23,8 +24,9 @@ public interface AppComponent {
     void inject(SearchSeriesInteractor interactor);
     void inject(SearchSuggestionsInteractor interactor);
     void inject(FavoriteSeriesInteractor interactor);
-    void inject(SearchPresenter presenter);
+    void inject(SerieDetailInteractor interactor);
 
+    void inject(SearchPresenter presenter);
     void inject(FavoriteSeriesPresenter presenter);
     void inject(PopularSeriesPresenter presenter);
     void inject(DetailPresenter presenter);

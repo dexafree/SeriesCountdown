@@ -21,22 +21,43 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class DetailPresenter implements SerieDetailInteractor.Callback {
+import rx.Observer;
+
+public class DetailPresenter {
 
     private final static String TAG = DetailPresenter.class.getName();
 
     @Inject
     FavoriteSeriesInteractor favoriteSeriesInteractor;
 
+    @Inject
+    SerieDetailInteractor interactor;
+
     private DetailView view;
-    private SerieDetailInteractor interactor;
-
-
     private SerieDetail showingDetail;
+
+    final Observer<SerieDetail> observer = new Observer<SerieDetail>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            view.hideProgress();
+            view.showError();
+        }
+
+        @Override
+        public void onNext(SerieDetail serieDetail) {
+            showingDetail = serieDetail;
+            showSerieDetail(serieDetail);
+        }
+    };
+
 
     public DetailPresenter(DetailView view) {
         this.view = view;
-        this.interactor = new SerieDetailInteractor(this);
 
         SeriesCountdown.inject(this);
     }
@@ -46,7 +67,7 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
         view.showProgress();
         checkSerieInserted(serie);
-        interactor.loadSerieDetails(serie);
+        interactor.loadSerieDetails(serie, observer);
 
     }
 
@@ -79,13 +100,6 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
         view.setFavoritable(!isSerieInserted);
     }
 
-    @Override
-    public void onDataDownloaded(SerieDetail data) {
-
-        this.showingDetail = data;
-        showSerieDetail(data);
-
-    }
 
     private void showSerieDetail(SerieDetail data){
         view.hideProgress();
@@ -234,12 +248,6 @@ public class DetailPresenter implements SerieDetailInteractor.Callback {
 
     private String zeroPad(int number){
         return number < 10 ? "0"+number : ""+number;
-    }
-
-    @Override
-    public void onError() {
-        view.hideProgress();
-        view.showError();
     }
 
     public DetailPersistance getPersistance(){
