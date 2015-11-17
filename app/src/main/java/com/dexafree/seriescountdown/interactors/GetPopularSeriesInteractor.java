@@ -10,7 +10,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class GetPopularSeriesInteractor extends BaseSeriesInteractor {
+public class GetPopularSeriesInteractor {
 
     private int maxPage = -1;
 

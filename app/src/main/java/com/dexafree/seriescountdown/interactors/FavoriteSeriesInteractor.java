@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.database.tables.FavoriteSeriesTable;
 import com.dexafree.seriescountdown.model.Serie;
 
@@ -18,7 +17,7 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 
-public class FavoriteSeriesInteractor extends BaseSeriesInteractor {
+public class FavoriteSeriesInteractor {
 
     @Inject
     SQLiteDatabase database;

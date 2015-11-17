@@ -13,7 +13,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class SearchSeriesInteractor extends BaseSeriesInteractor {
+public class SearchSeriesInteractor {
 
     @Inject
     ApiService apiService;
