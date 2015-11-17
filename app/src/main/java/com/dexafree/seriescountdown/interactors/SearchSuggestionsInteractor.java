@@ -18,8 +18,9 @@ public class SearchSuggestionsInteractor {
     @Inject
     ApiService apiService;
 
-    public SearchSuggestionsInteractor(){
-        SeriesCountdown.inject(this);
+    @Inject
+    public SearchSuggestionsInteractor(ApiService apiService){
+        this.apiService = apiService;
     }
 
     public Subscription loadSuggestions(Observer<List<String>> observer, String query){

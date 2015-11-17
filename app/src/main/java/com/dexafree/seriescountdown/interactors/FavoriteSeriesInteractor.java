@@ -23,8 +23,9 @@ public class FavoriteSeriesInteractor extends BaseSeriesInteractor {
     @Inject
     SQLiteDatabase database;
 
-    public FavoriteSeriesInteractor() {
-        SeriesCountdown.inject(this);
+    @Inject
+    public FavoriteSeriesInteractor(SQLiteDatabase sqLiteDatabase) {
+        this.database = sqLiteDatabase;
     }
 
     public Subscription loadSeries(Observer<Serie> observer) {

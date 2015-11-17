@@ -9,7 +9,9 @@ import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.GetPopularSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SearchSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SearchSuggestionsInteractor;
+import com.dexafree.seriescountdown.interactors.model.SerieDetailDeserializer;
 import com.dexafree.seriescountdown.interactors.service.ApiService;
+import com.dexafree.seriescountdown.model.SerieDetail;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,14 +35,14 @@ public class AppModule {
 
     @Singleton
     @Provides
-    GetPopularSeriesInteractor providePopularSeriesInteractor(){
-        return new GetPopularSeriesInteractor();
+    GetPopularSeriesInteractor providePopularSeriesInteractor(ApiService apiService){
+        return new GetPopularSeriesInteractor(apiService);
     }
 
     @Singleton
     @Provides
-    FavoriteSeriesInteractor provideFavoriteSeriesInteractor(){
-        return new FavoriteSeriesInteractor();
+    FavoriteSeriesInteractor provideFavoriteSeriesInteractor(SQLiteDatabase sqLiteDatabase){
+        return new FavoriteSeriesInteractor(sqLiteDatabase);
     }
 
     @Singleton
@@ -51,8 +53,8 @@ public class AppModule {
 
     @Singleton
     @Provides
-    SearchSuggestionsInteractor provideSearchSuggestionsInteractor(){
-        return new SearchSuggestionsInteractor();
+    SearchSuggestionsInteractor provideSearchSuggestionsInteractor(ApiService apiService){
+        return new SearchSuggestionsInteractor(apiService);
     }
 
     @Singleton
@@ -65,6 +67,7 @@ public class AppModule {
     @Provides
     ApiService provideApiService(){
         Gson gson = new GsonBuilder()
+                .registerTypeAdapter(SerieDetail.class, new SerieDetailDeserializer())
                 .create();
 
         RestAdapter.LogLevel logLevel = BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;

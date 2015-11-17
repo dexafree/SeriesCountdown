@@ -1,6 +1,5 @@
 package com.dexafree.seriescountdown.interactors;
 
-import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.interactors.service.ApiService;
 import com.dexafree.seriescountdown.model.Serie;
 import javax.inject.Inject;
@@ -15,10 +14,12 @@ public class GetPopularSeriesInteractor extends BaseSeriesInteractor {
 
     private int maxPage = -1;
 
-    @Inject ApiService apiService;
+    @Inject
+    ApiService apiService;
 
-    public GetPopularSeriesInteractor(){
-        SeriesCountdown.inject(this);
+    @Inject
+    public GetPopularSeriesInteractor(ApiService apiService){
+        this.apiService = apiService;
     }
 
     public Subscription loadSeries(Observer<Serie> subscriber, int page) {

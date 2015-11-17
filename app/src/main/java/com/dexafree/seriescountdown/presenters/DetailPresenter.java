@@ -3,6 +3,7 @@ package com.dexafree.seriescountdown.presenters;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.interactors.FavoriteSeriesInteractor;
 import com.dexafree.seriescountdown.interactors.SerieDetailInteractor;
 import com.dexafree.seriescountdown.interfaces.DetailView;
@@ -18,20 +19,26 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 public class DetailPresenter implements SerieDetailInteractor.Callback {
 
     private final static String TAG = DetailPresenter.class.getName();
 
+    @Inject
+    FavoriteSeriesInteractor favoriteSeriesInteractor;
+
     private DetailView view;
     private SerieDetailInteractor interactor;
-    private FavoriteSeriesInteractor favoriteSeriesInteractor;
+
 
     private SerieDetail showingDetail;
 
     public DetailPresenter(DetailView view) {
         this.view = view;
         this.interactor = new SerieDetailInteractor(this);
-        this.favoriteSeriesInteractor = new FavoriteSeriesInteractor();
+
+        SeriesCountdown.inject(this);
     }
 
     public void init(){

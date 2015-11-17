@@ -9,9 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Carlos on 16/11/15.
- */
+
 public class SearchResponse {
 
     @SerializedName("page")

@@ -85,8 +85,6 @@ public class SearchPresenter {
 
     public SearchPresenter(SearchView view) {
         this.view = view;
-        this.searchSuggestionsInteractor = new SearchSuggestionsInteractor();
-        this.getSeriesInteractor = new SearchSeriesInteractor();
         this.searchPage = 1;
         this.suggestionClicked = false;
         SeriesCountdown.inject(this);
