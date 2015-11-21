@@ -63,20 +63,30 @@ public class AppModule {
         return new DatabaseOpenHelper(application).getWritableDatabase();
     }
 
+
     @Singleton
     @Provides
-    ApiService provideApiService(){
-        Gson gson = new GsonBuilder()
+    Gson provideGson(){
+        return new GsonBuilder()
                 .registerTypeAdapter(SerieDetail.class, new SerieDetailDeserializer())
                 .create();
+    }
 
+    @Singleton
+    @Provides
+    RestAdapter provideRestAdapter(Gson gson){
         RestAdapter.LogLevel logLevel = BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
+        return new RestAdapter.Builder()
                 .setLogLevel(logLevel)
                 .setEndpoint(ENDPOINT)
                 .setConverter(new GsonConverter(gson))
                 .build();
+    }
+
+    @Singleton
+    @Provides
+    ApiService provideApiService(RestAdapter restAdapter){
 
         return restAdapter.create(ApiService.class);
     }
