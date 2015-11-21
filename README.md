@@ -33,6 +33,14 @@ SeriesCountdown gets all the information from the web [EpisoDate](https://www.ep
 ## Credits
 * [EpisoDate](https://www.episodate.com/): Source of information (and also very nice and helpful!)
 
+## Download
+
+You can either clone the project and get compile your own version, or you can download it from Google Play:
+
+
+[![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.dexafree.seriescountdown)
+
+
 ## License
 
 This software is licensed under Apache v2 which basically means that you can make your own version and it can be private.
