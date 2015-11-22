@@ -11,7 +11,8 @@
         android:layout_width="40dp"
         android:layout_height="match_parent"
         android:src="@mipmap/ic_indicator"
-        android:tint="@color/accent"/>
+        android:tint="@color/accent"
+        android:contentDescription="Row icon"/>
 
     <TextView
         android:id="@+id/row_content"
@@ -21,6 +22,7 @@
         android:paddingLeft="@dimen/small_padding"
         android:paddingBottom="2dp"
         android:layout_toRightOf="@id/row_image"
+        android:layout_toLeftOf="@+id/divider"
         android:textSize="20sp"
         android:textColor="@color/black"/>
 
@@ -34,7 +36,31 @@
         android:paddingLeft="@dimen/small_padding"
         android:paddingTop="2dp"
         android:layout_toRightOf="@id/row_image"
+        android:layout_toLeftOf="@+id/divider"
         android:textSize="16sp"/>
+
+    <ImageView
+        android:id="@+id/alarm_button"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:src="@mipmap/ic_alarm"
+        android:tint="@color/accent"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/small_padding"
+        android:layout_marginRight="@dimen/small_padding"
+        android:contentDescription="Alarm button for setting reminder"
+        android:background="?android:attr/selectableItemBackground"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/divider_grey"
+        android:layout_marginTop="@dimen/small_padding"
+        android:layout_marginBottom="@dimen/small_padding"
+        android:layout_toLeftOf="@id/alarm_button"
+        android:visibility="gone"/>
 
 
 

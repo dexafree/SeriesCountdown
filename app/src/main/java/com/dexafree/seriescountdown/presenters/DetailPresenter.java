@@ -17,6 +17,7 @@ import org.joda.time.Days;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 
+import java.util.Date;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -119,6 +120,12 @@ public class DetailPresenter {
         view.showSerieEnd(endDate);
         view.showSerieGenres(data.getGenres());
         view.showSerieDescription(description);
+
+        if(!airDateFormatted.equals("Unknown")){
+            DateTime airDate = parseDate(data.getAirDate());
+            Date date = airDate.toDate();
+            view.showReminderAction(date);
+        }
     }
 
 
@@ -199,8 +206,7 @@ public class DetailPresenter {
             return airDate;
         }
 
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-        DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(airDate).toDateTime();
+        DateTime emissionTime = parseDate(airDate);
 
         int month = emissionTime.getMonthOfYear();
 
@@ -210,6 +216,12 @@ public class DetailPresenter {
 
         return day + "/" + month + "/" + year;
 
+    }
+
+    private DateTime parseDate(String date){
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateTime emissionTime = DateTimeFormat.forPattern(pattern).withLocale(Locale.US).parseDateTime(date).toDateTime();
+        return emissionTime;
     }
 
     private String getTimeUntilNextEpisode(String dateNextEpisode){

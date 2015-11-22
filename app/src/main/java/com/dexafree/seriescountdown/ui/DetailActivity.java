@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -36,6 +37,9 @@ import com.dexafree.seriescountdown.ui.views.MaterialRow;
 import com.dexafree.seriescountdown.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -49,9 +53,6 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
     @Bind(R.id.serie_image)
     ImageView serieImage;
-
-    @Bind(R.id.detail_scrollview)
-    NestedScrollView scrollView;
 
     @Bind(R.id.time_remaining_textview)
     TextView timeRemainingTextView;
@@ -196,11 +197,18 @@ public class DetailActivity extends BaseActivity implements DetailView {
     public void showSerieGenres(String text) {
         serieGenresRow.setRowContent(text);
         serieGenresRow.setHintText("Genres");
+        serieGenresRow.setImage(R.mipmap.ic_genre);
     }
 
     @Override
     public void showSerieDescription(String text) {
         serieDescriptionTextView.setText(text);
+    }
+
+    @Override
+    public void showReminderAction(Date date) {
+        dateRow.showReminder();
+        dateRow.setReminderClick(v -> setReminder(date, mSerie.getName()));
     }
 
     @Override
@@ -387,6 +395,21 @@ public class DetailActivity extends BaseActivity implements DetailView {
 
         // If we reach here then we have not added a listener
         return false;
+    }
+
+    private void setReminder(Date date, String title){
+
+        long start = date.getTime();
+        long end = start+60*60*1000;
+
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, start)
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end)
+                .putExtra(CalendarContract.Events.TITLE, title)
+                .putExtra(CalendarContract.Events.DESCRIPTION, "New episode from "+title)
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+        startActivity(intent);
     }
 
 

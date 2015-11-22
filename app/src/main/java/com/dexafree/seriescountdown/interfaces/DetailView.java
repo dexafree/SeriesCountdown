@@ -2,6 +2,8 @@ package com.dexafree.seriescountdown.interfaces;
 
 import com.dexafree.seriescountdown.model.Serie;
 
+import java.util.Date;
+
 public interface DetailView {
 
     void showProgress();
@@ -19,6 +21,8 @@ public interface DetailView {
     void showSerieEnd(String text);
     void showSerieGenres(String text);
     void showSerieDescription(String text);
+
+    void showReminderAction(Date date);
 
     void showError();
 
