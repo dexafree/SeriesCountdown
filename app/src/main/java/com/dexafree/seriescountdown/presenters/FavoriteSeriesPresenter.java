@@ -16,15 +16,32 @@ public class FavoriteSeriesPresenter extends BaseSerieListPresenter<FavoriteSeri
 
     private Subscription subscription;
 
-    public FavoriteSeriesPresenter(SeriesView view){
-        super(view);
+    final Observer<List<Serie>> reloadSeriesObserver = new Observer<List<Serie>>() {
+        @Override
+        public void onCompleted() {
 
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            view.showError();
+        }
+
+        @Override
+        public void onNext(List<Serie> series) {
+            view.updateSeries(series);
+        }
+    };
+
+
+    public FavoriteSeriesPresenter(){
         // Inject the presenter
         SeriesCountdown.inject(this);
     }
 
     @Override
-    public void init() {
+    public void init(SeriesView view) {
+        super.init(view);
         loadSeries();
     }
 
@@ -34,24 +51,7 @@ public class FavoriteSeriesPresenter extends BaseSerieListPresenter<FavoriteSeri
 
     public void reloadSeries(){
 
-        Observer<List<Serie>> reloadedSeries = new Observer<List<Serie>>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                view.showError();
-            }
-
-            @Override
-            public void onNext(List<Serie> series) {
-                view.updateSeries(series);
-            }
-        };
-
-        interactor.reloadSeries(reloadedSeries);
+        interactor.reloadSeries(reloadSeriesObserver);
     }
 
 

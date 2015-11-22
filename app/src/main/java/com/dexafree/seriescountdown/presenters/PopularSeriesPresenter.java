@@ -15,8 +15,7 @@ public class PopularSeriesPresenter extends BaseSerieListPresenter<GetPopularSer
     private Subscription subscription;
     private int currentPage;
 
-    public PopularSeriesPresenter(SeriesView view){
-        super(view);
+    public PopularSeriesPresenter(){
         this.currentPage = 1;
 
         // Inject the presenter
@@ -24,7 +23,8 @@ public class PopularSeriesPresenter extends BaseSerieListPresenter<GetPopularSer
     }
 
     @Override
-    public void init() {
+    public void init(SeriesView view) {
+        super.init(view);
         this.subscription = interactor.loadSeries(this, currentPage++);
     }
 

@@ -12,6 +12,8 @@ import com.dexafree.seriescountdown.interactors.SearchSuggestionsInteractor;
 import com.dexafree.seriescountdown.interactors.model.SerieDetailDeserializer;
 import com.dexafree.seriescountdown.interactors.service.ApiService;
 import com.dexafree.seriescountdown.model.SerieDetail;
+import com.dexafree.seriescountdown.presenters.FavoriteSeriesPresenter;
+import com.dexafree.seriescountdown.presenters.PopularSeriesPresenter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -75,7 +77,8 @@ public class AppModule {
     @Singleton
     @Provides
     RestAdapter provideRestAdapter(Gson gson){
-        RestAdapter.LogLevel logLevel = BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;
+        //RestAdapter.LogLevel logLevel = BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;
+        RestAdapter.LogLevel logLevel = RestAdapter.LogLevel.NONE;
 
         return new RestAdapter.Builder()
                 .setLogLevel(logLevel)
@@ -89,6 +92,19 @@ public class AppModule {
     ApiService provideApiService(RestAdapter restAdapter){
 
         return restAdapter.create(ApiService.class);
+    }
+
+
+    @Singleton
+    @Provides
+    FavoriteSeriesPresenter provideFavoriteSeriesPresenter(){
+        return new FavoriteSeriesPresenter();
+    }
+
+
+    @Provides
+    PopularSeriesPresenter providePopularSeriesPresenter(){
+        return new PopularSeriesPresenter();
     }
 
 }

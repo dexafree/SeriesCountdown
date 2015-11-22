@@ -11,6 +11,8 @@ import com.dexafree.seriescountdown.presenters.DetailPresenter;
 import com.dexafree.seriescountdown.presenters.FavoriteSeriesPresenter;
 import com.dexafree.seriescountdown.presenters.PopularSeriesPresenter;
 import com.dexafree.seriescountdown.presenters.SearchPresenter;
+import com.dexafree.seriescountdown.ui.fragments.FavoriteSeriesFragment;
+import com.dexafree.seriescountdown.ui.fragments.PopularSeriesFragment;
 
 import javax.inject.Singleton;
 
@@ -19,6 +21,9 @@ import dagger.Component;
 @Singleton
 @Component(modules = AppModule.class)
 public interface AppComponent {
+
+    void inject(FavoriteSeriesFragment fragment);
+    void inject(PopularSeriesFragment fragment);
 
     void inject(GetPopularSeriesInteractor interactor);
     void inject(SearchSeriesInteractor interactor);

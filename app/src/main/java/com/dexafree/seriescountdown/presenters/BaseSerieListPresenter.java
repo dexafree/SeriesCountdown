@@ -14,11 +14,9 @@ public abstract class BaseSerieListPresenter<T> implements Observer<Serie> {
 
     protected SeriesView view;
 
-    public BaseSerieListPresenter(SeriesView view){
+    public void init(SeriesView view){
         this.view = view;
     }
-
-    public abstract void init();
 
     public void onItemClicked(int position){
         view.startDetailActivity(position);

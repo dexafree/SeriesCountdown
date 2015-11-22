@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.dexafree.seriescountdown.R;
+import com.dexafree.seriescountdown.SeriesCountdown;
 import com.dexafree.seriescountdown.adapters.SeriesAdapter;
 import com.dexafree.seriescountdown.interfaces.SeriesView;
 import com.dexafree.seriescountdown.model.Serie;
@@ -20,6 +21,8 @@ import com.dexafree.seriescountdown.utils.RecyclerClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
@@ -29,15 +32,17 @@ public abstract class BaseSerieListFragment<T extends BaseSerieListPresenter> ex
     @Bind(R.id.series_recyclerview)
     RecyclerView seriesRecyclerView;
 
-    protected T presenter;
+    @Inject
+    T presenter;
+
     protected SeriesAdapter mAdapter;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, null);
         ButterKnife.bind(this, v);
-        presenter = getPresenter();
         mAdapter = new SeriesAdapter(new ArrayList<>());
         prepareViews();
         return v;
@@ -46,7 +51,7 @@ public abstract class BaseSerieListFragment<T extends BaseSerieListPresenter> ex
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.init();
+        presenter.init(this);
     }
 
     private void prepareViews(){
@@ -106,6 +111,4 @@ public abstract class BaseSerieListFragment<T extends BaseSerieListPresenter> ex
     public void showError() {
         showToast("There has been an error");
     }
-
-    protected abstract T getPresenter();
 }
